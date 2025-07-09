@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "resources/js": {
+    "rgpd": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -54,10 +54,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "resources/js:build:production"
+              "buildTarget": "rgpd:build:production"
             },
             "development": {
-              "buildTarget": "resources/js:build:development"
+              "buildTarget": "rgpd:build:development"
             }
           },
           "defaultConfiguration": "development"
