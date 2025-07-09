@@ -16,12 +16,7 @@
             "outputPath": "public/build",
             "browser": "front/main.ts",
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
+            "assets": [],
             "styles": [
               "front/styles.css"
             ],
