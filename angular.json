@@ -3,27 +3,27 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "front": {
+    "resources/js": {
       "projectType": "application",
       "schematics": {},
       "root": "",
-      "sourceRoot": "front",
+      "sourceRoot": "resources/js",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
             "outputPath": "public/build",
-            "browser": "front/main.ts",
+            "browser": "resources/js/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [],
             "styles": [
-              "front/styles.css"
+              "resources/js/styles.css"
             ],
-            "server": "front/main.server.ts",
+            "server": "resources/js/main.server.ts",
             "outputMode": "server",
             "ssr": {
-              "entry": "front/server.ts"
+              "entry": "resources/js/server.ts"
             }
           },
           "configurations": {
@@ -54,10 +54,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "front:build:production"
+              "buildTarget": "resources/js:build:production"
             },
             "development": {
-              "buildTarget": "front:build:development"
+              "buildTarget": "resources/js:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
               }
             ],
             "styles": [
-              "front/styles.css"
+              "resources/js/styles.css"
             ]
           }
         }

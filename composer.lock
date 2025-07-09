@@ -1498,7 +1498,7 @@
                 "vimeo/psalm": "^4.24.0 || ^5.0.0"
             },
             "suggest": {
-                "symfony/yaml": "v2.3+ required if using the Front Matter extension"
+                "symfony/yaml": "v2.3+ required if using the resources/js Matter extension"
             },
             "type": "library",
             "extra": {

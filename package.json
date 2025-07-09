@@ -1,5 +1,5 @@
 {
-  "name": "rgpd-front",
+  "name": "rgpd-resources/js",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,8 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:front": "node dist/front/server/server.mjs",
-    "start:angular": "ng serve --host 0.0.0.0 --port 4200 --proxy-config rgpdFront/proxy.conf.json",
+    "serve:ssr:resources/js": "node dist/resources/js/server/server.mjs",
+    "start:angular": "ng serve --host 0.0.0.0 --port 4200 --proxy-config rgpdresources/js/proxy.conf.json",
     "start:ssr": "node public/build/server/server.mjs"
   },
   "private": true,
