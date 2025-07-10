@@ -1,21 +1,23 @@
-import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { AuthLayout } from '../layouts/auth-layout';
 import { ButtonModule } from 'primeng/button';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'auth-verify-email',
+  selector: 'app-auth-verify-email',
   standalone: true,
   imports: [AuthLayout, ButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <auth-layout>
+    <app-auth-layout>
       <div auth-header>
         <h2 class="text-2xl font-bold text-center mb-2">Verifica tu correo</h2>
         <p class="text-center text-gray-500 mb-4">Hemos enviado un enlace de verificación a tu correo electrónico.</p>
       </div>
       <div class="flex flex-col gap-4 items-center">
-        <button pButton label="Reenviar correo" class="w-full" (click)="onResend()" [disabled]="loading"></button>
+        <button pButton class="w-full" (click)="onResend()" [disabled]="loading">
+          <span>Reenviar correo</span>
+        </button>
         @if (success) {
           <span class="text-green-600">¡Correo reenviado!</span>
         }
@@ -26,7 +28,7 @@ import { AuthService } from '../services/auth.service';
       <div auth-footer class="flex flex-col gap-2 text-center mt-4">
         <a href="#" class="text-sm text-gray-500 hover:underline">¿No recibiste el correo? Revisa tu carpeta de spam.</a>
       </div>
-    </auth-layout>
+    </app-auth-layout>
   `
 })
 export class VerifyEmailComponent {

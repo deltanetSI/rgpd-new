@@ -15,7 +15,7 @@ import { ForgotPasswordUseCase } from '../usecases/forgot-password.usecase';
 import { ResetPasswordUseCase } from '../usecases/reset-password.usecase';
 import { UpdatePasswordUseCase } from '../usecases/update-password.usecase';
 import { UpdateProfileUseCase } from '../usecases/update-profile.usecase';
-import { tap } from 'rxjs';
+import { from, switchMap, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -31,7 +31,6 @@ export class AuthService {
   readonly user = computed(() => this.userSignal());
   readonly isAuthenticated = computed(() => !!this.userSignal());
 
-  // Cargar usuario actual (GET /api/user)
   getUser() {
     return this.http.get<User>('/api/user', { withCredentials: true }).pipe(
       tap(user => this.userSignal.set(user))
@@ -39,31 +38,40 @@ export class AuthService {
   }
 
   login(dto: LoginDto) {
-    return this.loginUseCase.execute(dto).pipe(
+    return from(this.loginUseCase.execute(dto)).pipe(
+      switchMap(response => response),
       tap(() => this.getUser().subscribe())
     );
   }
 
   register(dto: RegisterDto) {
-    return this.registerUseCase.execute(dto).pipe(
+    return from(this.registerUseCase.execute(dto)).pipe(
+      switchMap(response => response),
       tap(() => this.getUser().subscribe())
     );
   }
 
   forgotPassword(dto: ForgotPasswordDto) {
-    return this.forgotPasswordUseCase.execute(dto);
+    return from(this.forgotPasswordUseCase.execute(dto)).pipe(
+      switchMap(response => response)
+    );
   }
 
   resetPassword(dto: ResetPasswordDto) {
-    return this.resetPasswordUseCase.execute(dto);
+    return from(this.resetPasswordUseCase.execute(dto)).pipe(
+      switchMap(response => response)
+    );
   }
 
   updatePassword(dto: UpdatePasswordDto) {
-    return this.updatePasswordUseCase.execute(dto);
+    return from(this.updatePasswordUseCase.execute(dto)).pipe(
+      switchMap(response => response)
+    );
   }
 
   updateProfile(dto: UpdateProfileDto) {
-    return this.updateProfileUseCase.execute(dto).pipe(
+    return from(this.updateProfileUseCase.execute(dto)).pipe(
+      switchMap(response => response),
       tap(() => this.getUser().subscribe())
     );
   }
@@ -74,7 +82,6 @@ export class AuthService {
     );
   }
 
-  // Métodos de ayuda
   hasRole(role: string): boolean {
     return !!this.user()?.roles?.includes(role);
   }

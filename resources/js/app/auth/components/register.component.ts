@@ -6,12 +6,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'auth-register',
+  selector: 'app-auth-register',
   standalone: true,
   imports: [AuthLayout, ReactiveFormsModule, ButtonModule, InputTextModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <auth-layout>
+    <app-auth-layout>
       <div auth-header>
         <h2 class="text-2xl font-bold text-center mb-2">Crear cuenta</h2>
         <p class="text-center text-gray-500 mb-4">Regístrate para acceder</p>
@@ -30,7 +30,7 @@ import { AuthService } from '../services/auth.service';
       <div auth-footer class="flex flex-col gap-2 text-center mt-4">
         <a href="#" class="text-sm text-gray-500 hover:underline">¿Ya tienes cuenta? Inicia sesión</a>
       </div>
-    </auth-layout>
+    </app-auth-layout>
   `
 })
 export class RegisterComponent {
@@ -57,7 +57,7 @@ export class RegisterComponent {
       password_confirmation: password_confirmation ?? ''
     }).subscribe({
       next: () => { this.loading = false; },
-      error: err => {
+      error: (err: { error: { message: string; }; }) => {
         this.loading = false;
         this.error = err?.error?.message || 'Error al registrarse';
       }

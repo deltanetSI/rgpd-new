@@ -6,12 +6,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'auth-forgot-password',
+  selector: 'app-auth-forgot-password',
   standalone: true,
   imports: [AuthLayout, ReactiveFormsModule, ButtonModule, InputTextModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <auth-layout>
+    <app-auth-layout>
       <div auth-header>
         <h2 class="text-2xl font-bold text-center mb-2">Recuperar contraseña</h2>
         <p class="text-center text-gray-500 mb-4">Introduce tu correo para recibir instrucciones</p>
@@ -30,7 +30,7 @@ import { AuthService } from '../services/auth.service';
       <div auth-footer class="flex flex-col gap-2 text-center mt-4">
         <a href="#" class="text-sm text-gray-500 hover:underline">Volver a iniciar sesión</a>
       </div>
-    </auth-layout>
+    </app-auth-layout>
   `
 })
 export class ForgotPasswordComponent {
@@ -54,7 +54,7 @@ export class ForgotPasswordComponent {
         this.loading = false;
         this.success = true;
       },
-      error: err => {
+      error: (err: { error: { message: string; }; }) => {
         this.loading = false;
         this.error = err?.error?.message || 'Error al enviar el correo';
       }

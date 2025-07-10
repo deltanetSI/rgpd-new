@@ -6,12 +6,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'auth-reset-password',
+  selector: 'app-auth-reset-password',
   standalone: true,
   imports: [AuthLayout, ReactiveFormsModule, ButtonModule, InputTextModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <auth-layout>
+    <app-auth-layout>
       <div auth-header>
         <h2 class="text-2xl font-bold text-center mb-2">Restablecer contraseña</h2>
         <p class="text-center text-gray-500 mb-4">Introduce tu nueva contraseña</p>
@@ -30,7 +30,7 @@ import { AuthService } from '../services/auth.service';
           <div class="text-red-600 text-sm text-center mt-2">{{ error }}</div>
         }
       </form>
-    </auth-layout>
+    </app-auth-layout>
   `
 })
 export class ResetPasswordComponent {
@@ -62,7 +62,7 @@ export class ResetPasswordComponent {
         this.loading = false;
         this.success = true;
       },
-      error: err => {
+      error: (err: { error: { message: string; }; }) => {
         this.loading = false;
         this.error = err?.error?.message || 'Error al restablecer la contraseña';
       }

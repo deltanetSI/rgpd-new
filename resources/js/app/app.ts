@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { PrimeNG } from 'primeng/config';
 
@@ -10,7 +10,7 @@ import { PrimeNG } from 'primeng/config';
 })
 export class App implements OnInit {
   
-  constructor(private primeng: PrimeNG) {}
+  private primeng = inject(PrimeNG);
 
   ngOnInit() {
     this.primeng.ripple.set(true);
