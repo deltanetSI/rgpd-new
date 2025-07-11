@@ -1,9 +1,10 @@
-import { inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ResetPasswordDto } from '../interfaces/auth.dto';
 import { environment } from '../../core/environments/environment';
 import { CsrfService } from '../../core/services/csrf.service';
+import { ResetPasswordDto } from '../interfaces/auth.dto';
 
+@Injectable({ providedIn: 'root' })
 export class ResetPasswordUseCase {
   private http = inject(HttpClient);
   private csrf = inject(CsrfService);

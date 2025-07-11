@@ -20,12 +20,12 @@ import { from, switchMap, tap } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
-  private loginUseCase = new LoginUseCase();
-  private registerUseCase = new RegisterUseCase();
-  private forgotPasswordUseCase = new ForgotPasswordUseCase();
-  private resetPasswordUseCase = new ResetPasswordUseCase();
-  private updatePasswordUseCase = new UpdatePasswordUseCase();
-  private updateProfileUseCase = new UpdateProfileUseCase();
+  private loginUseCase = inject(LoginUseCase);
+  private registerUseCase = inject(RegisterUseCase);
+  private forgotPasswordUseCase = inject(ForgotPasswordUseCase);
+  private resetPasswordUseCase = inject(ResetPasswordUseCase);
+  private updatePasswordUseCase = inject(UpdatePasswordUseCase);
+  private updateProfileUseCase = inject(UpdateProfileUseCase);
 
   private userSignal = signal<User | null>(null);
   readonly user = computed(() => this.userSignal());
