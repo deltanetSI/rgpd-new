@@ -1,0 +1,18 @@
+<p-menubar [model]="items">
+    <ng-template pTemplate="start">
+        <img src="https://primefaces.org/cdn/primeng/images/primeng.svg" />
+    </ng-template>
+    <ng-template pTemplate="end">
+
+
+
+<p-button size="small" label="Añadir responsable" icon="pi pi-plus"/>
+
+        <p-button size="small" [icon]="isDark ? 'pi pi-sun' : 'pi pi-moon'" (click)="toggleDarkMode()" [rounded]="true">
+        </p-button>
+
+
+       
+
+    </ng-template>
+</p-menubar>

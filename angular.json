@@ -18,7 +18,7 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [],
             "styles": [
-              "resources/js/styles.css"
+               "resources/js/styles.css"
             ],
             "server": "resources/js/main.server.ts",
             "outputMode": "server",

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './auth/guards/auth.guard';
+import { MainLayoutComponent } from './layouts/main/main-layout.component';
 
 export const routes: Routes = [
   {
@@ -23,6 +24,19 @@ export const routes: Routes = [
     loadComponent: () => import('./auth/components/verify-email.component').then(m => m.VerifyEmailComponent),
     canActivate: [authGuard]
   },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' }
+
+  
+  {
+    path: '',
+    component: MainLayoutComponent, // Use the main layout for authenticated routes
+    //canActivate: [authGuard], // Protect these routes with authGuard
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // Default route after login
+      { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent) } // Placeholder for dashboard
+      // Other authenticated routes will go here
+    ]
+  },
+  //{ path: '', redirectTo: 'login', pathMatch: 'full' }, // Redirect root to login if not authenticated
+  //{ path: '**', redirectTo: 'login' } // Redirect unmatched paths to login
+
 ];

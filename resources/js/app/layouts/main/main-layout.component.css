@@ -1,0 +1,41 @@
+
+.app-header {
+    width: 100%;
+    background-color: var(--surface-card);
+    padding: 0.5rem;
+    z-index: 1000;
+}
+
+.main-container {
+    display: flex;
+    height: calc(100vh - 60px); /* Adjust based on header height */
+}
+
+.app-sidebar {
+    width: 250px;
+    background-color: var(--surface-ground);
+    padding: 1rem;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+    overflow-y: auto;
+}
+
+.app-content {
+    flex-grow: 1;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+/* PrimeNG Menubar adjustments */
+.p-menubar {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-content .p-menuitem-link {
+    padding: 0.75rem 1rem;
+}
+
+.p-menubar .p-menubar-end {
+    margin-left: auto;
+}

@@ -8,7 +8,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
-import Aura from '@primeuix/themes/aura';
+import customtheme from './customtheme';
 
 
 export const appConfig: ApplicationConfig = {
@@ -22,10 +22,10 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
         providePrimeNG({
           theme: {
-            preset: Aura,
+            preset: customtheme,
             options: {
                 prefix: 'p',
-                darkModeSelector: 'system',
+                darkModeSelector: '.app-dark',
                 cssLayer: false
             }
         }

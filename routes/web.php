@@ -10,7 +10,7 @@ Route::get('/{any}', function (Request $request) {
     $path = public_path($request->path());
 
     // Si el archivo existe físicamente (JS, CSS, imágenes), lo servimos directamente
-    if (File::exists($path) && !is_dir($path)) {
+    if (file_exists($path) && !is_dir($path)) {
         return response()->file($path);
     }
 
