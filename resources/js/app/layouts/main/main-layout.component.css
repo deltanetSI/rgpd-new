@@ -1,41 +1,170 @@
-
-.app-header {
-    width: 100%;
-    background-color: var(--surface-card);
-    padding: 0.5rem;
-    z-index: 1000;
+.app-layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: var(--surface-ground);
 }
 
-.main-container {
-    display: flex;
-    height: calc(100vh - 60px); /* Adjust based on header height */
+.app-navbar {
+  height: 4rem;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: var(--surface-card);
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
 }
 
-.app-sidebar {
-    width: 250px;
-    background-color: var(--surface-ground);
-    padding: 1rem;
-    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
-    overflow-y: auto;
-}
-
-.app-content {
+/* Grupo inicial del navbar */
+.app-navbar .p-toolbar-group-start {
+    /* Permitimos que este grupo crezca para empujar el centro si es necesario */
     flex-grow: 1;
-    padding: 1rem;
-    overflow-y: auto;
+    display: flex; /* Aseguramos flex para el contenido interno (el botón) */
+    align-items: center;
 }
 
-/* PrimeNG Menubar adjustments */
-.p-menubar {
-    background-color: transparent !important;
-    border: none !important;
-    padding: 0 !important;
+/* Grupo central del navbar para el icono - CRUCIAL PARA EL CENTRADO */
+.app-navbar .p-toolbar-group-center {
+  /* Flex-grow asegura que ocupe todo el espacio horizontal disponible
+     entre el grupo de inicio y el grupo final */
+  flex-grow: 1;
+  display: flex;
+  justify-content: center; /* Centra horizontalmente el icono */
+  align-items: center;
+  /* Transición de opacidad para el desvanecimiento del icono */
+  transition: opacity 0.3s ease-in-out;
 }
 
-.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-content .p-menuitem-link {
+/* Grupo final del navbar */
+.app-navbar .p-toolbar-group-end {
+    /* No le damos flex-grow para que ocupe solo el espacio de sus elementos */
+    display: flex;
+    align-items: center;
+}
+
+/* Clase para el icono central del navbar */
+.app-navbar-icon {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+  /* Transición para el efecto de desvanecimiento */
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Clase que se aplica al icono para desvanecerlo */
+.app-navbar-icon.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Sidebar */
+.app-sidebar-panel {
+  width: 18rem;
+  top: 4rem;
+  height: calc(100vh - 4rem);
+  z-index: 1000;
+  padding-top: 0;
+  background-color: var(--surface-card);
+  border-right: 1px solid var(--surface-border);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  position: fixed;
+  left: 0;
+}
+
+.app-sidebar-panel.p-sidebar-active {
+  transform: translateX(0);
+}
+
+.sidebar-header {
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+
+.sidebar-spacer {
+  height: 1rem;
+  border-bottom: 1px solid var(--surface-border);
+  margin-bottom: 1rem;
+}
+
+.app-sidebar-menu {
+  padding-top: 1rem;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.app-sidebar-menu .p-panelmenu .p-panelmenu-header a,
+.app-sidebar-menu .p-panelmenu .p-panelmenu-content .p-menuitem-link {
     padding: 0.75rem 1rem;
+    color: var(--text-color);
 }
 
-.p-menubar .p-menubar-end {
-    margin-left: auto;
+.app-main-content {
+  flex-grow: 1;
+  padding-top: 4rem;
+  background-color: var(--surface-ground);
+  overflow-y: auto;
+  position: relative;
+  height: calc(100vh - 4rem);
+  margin-left: 0;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.app-content-area {
+  flex-grow: 1;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Botón de alternar sidebar: Ahora siempre dentro del navbar */
+.sidebar-toggle-button {
+  transition: margin-left 0.3s ease-in-out;
+  /* margin-left: 0; por defecto estará al inicio del grupo start */
+  color: var(--text-color);
+  z-index: 1002;
+  /* Aseguramos que no se aplique un margen adicional que pueda desalinearlo en móvil */
+  margin-left: 0 !important; /* Añadimos !important para anular posibles estilos de PrimeNG */
+}
+
+/* Media Query para escritorio:
+   Cuando el sidebar está visible en escritorio, desplaza el botón. */
+@media (min-width: 769px) {
+  .sidebar-toggle-button.sidebar-toggle-button-shifted {
+    /* Este margen es CRUCIAL. Mueve el botón a la derecha del sidebar.
+       18rem es el ancho del sidebar. Unos 19rem a 19.5rem deberían ser suficientes.
+       Probemos con 19.5rem para asegurar visibilidad. */
+    margin-left: 20rem !important; /* Ajusta este valor si necesitas moverlo más */
+  }
+
+  /* Cuando el sidebar está visible en escritorio, el contenido principal debe tener un margen */
+  .app-main-content {
+      margin-left: 18rem;
+  }
+
+  /* Si el sidebar está colapsado en escritorio, el contenido principal no tiene margen */
+  .app-main-content.sidebar-collapsed {
+      margin-left: 0;
+  }
+}
+
+/* Media Queries para dispositivos móviles */
+@media (max-width: 768px) {
+  /* En móvil, el botón siempre se queda a la izquierda, ya que el sidebar es modal. */
+  .sidebar-toggle-button {
+    margin-left: 0 !important; /* Aseguramos que no se mueva */
+  }
+  /* En móvil, el contenido principal siempre ocupa todo el ancho, ya que el sidebar es modal. */
+  .app-main-content {
+    margin-left: 0;
+  }
+}
+
+.app-navbar .p-button.p-button-text {
+  color: var(--text-color);
 }
