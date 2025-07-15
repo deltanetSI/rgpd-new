@@ -32,10 +32,12 @@ export const routes: Routes = [
     //canActivate: [authGuard], // Protect these routes with authGuard
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // Default route after login
-      { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent) } // Placeholder for dashboard
-      // Other authenticated routes will go here
+      { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent) },
+      { path: 'organization', loadComponent: () => import('./features/organization/organization').then(m => m.OrganizationComponent) } 
     ]
   },
+
+  
   //{ path: '', redirectTo: 'login', pathMatch: 'full' }, // Redirect root to login if not authenticated
   //{ path: '**', redirectTo: 'login' } // Redirect unmatched paths to login
 

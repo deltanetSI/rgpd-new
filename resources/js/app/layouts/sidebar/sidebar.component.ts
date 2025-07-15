@@ -3,7 +3,7 @@ import { MenuItem } from 'primeng/api';
 import { DrawerModule } from 'primeng/drawer';
 import { PanelMenu } from 'primeng/panelmenu';
 import { ButtonModule } from 'primeng/button';
-import { SettingsPanelComponent } from '../../components/settings-panel/settings-panel';
+import { SettingsPanelComponent } from '../../features/settings-panel/settings-panel';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -28,6 +28,7 @@ export class SidebarComponent {
     {
       label: 'Organización',
       icon: 'pi pi-building-columns',
+      routerLink: '/organization'
     },
     
 

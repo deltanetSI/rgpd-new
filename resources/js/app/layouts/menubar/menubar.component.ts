@@ -19,9 +19,9 @@ import { TooltipModule } from 'primeng/tooltip';
   styleUrls: ['./menubar.component.css']
 })
 export class MenubarComponent {
+  
   @Input() isDark: boolean = false;
   @Input() sidebarVisible: boolean = false; // Input para conocer el estado del sidebar
-
   @Output() toggleDarkMode = new EventEmitter<void>();
   @Output() toggleSidebar = new EventEmitter<void>(); // Output para alternar el sidebar
 

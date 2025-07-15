@@ -13,10 +13,18 @@
 
     <p-panelMenu [model]="menuItems" class="flex-grow"></p-panelMenu>
 
-    <div class="sidebar-footer">
-      <p-button label="Administración" icon="pi pi-cog" (click)="openSettingsPanel()"></p-button>
-    </div>
+
   </div>
+
+
+<ng-template #footer>
+        <div class="flex items-center gap-2">
+            <button pButton label="Perfil" icon="pi pi-user" class="w-full" outlined (click)="openSettingsPanel()"></button>
+            <button pButton label="Salir" icon="pi pi-sign-out" class="w-full" severity="danger" text></button>
+        </div>
+    </ng-template>
+
+
 </p-drawer>
 
 <app-settings-panel [(displayPanel)]="displaySettingsPanel"

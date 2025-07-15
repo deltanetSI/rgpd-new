@@ -5,8 +5,8 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   template: `
-    <h2>Welcome to the Dashboard!</h2>
-    <p>This is your main application content.</p>
+    <h2>Dashboard</h2>
+    <p>Éste es el dashboard principal</p>
   `,
   styles: [`
     h2 { color: #333; }
