@@ -1,58 +1,15 @@
-<div class="app-layout-wrapper">
-  <p-toolbar styleClass="app-navbar">
-    <div class="p-toolbar-group-start">
-      <p-button
-        [icon]="sidebarVisible ? 'pi pi-arrow-left' : 'pi pi-bars'"
-        (click)="toggleSidebar()"
-        [text]="true"
-        pTooltip="Alternar Sidebar"
-        class="sidebar-toggle-button"
-        [class.sidebar-toggle-button-shifted]="sidebarVisible && !isMobile"
-      ></p-button>
-    </div>
+<div class="app-layout-wrapper h-screen flex flex-col">
+  <app-menubar [isDark]="isDark" [sidebarVisible]="sidebarVisible" (toggleDarkMode)="toggleDarkMode()"
+    (toggleSidebar)="toggleSidebar()" [ngClass]="{'app-menubar-shifted': sidebarVisible && !isMobile}"></app-menubar>
 
-    <div class="p-toolbar-group-center">
-      <i class="pi pi-shield app-navbar-icon" [class.fade-out]="!isNavbarLogoVisible"></i>
-    </div>
+  <div class="flex flex-grow">
+    <app-sidebar [(visible)]="sidebarVisible" [modal]="isMobile" [fullScreen]="isMobile"></app-sidebar>
 
-    <div class="p-toolbar-group-end">
-      <p-button
-        icon="pi pi-user"
-        [text]="true"
-        pTooltip="Mi Perfil"
-      ></p-button>
-
-      <p-button
-        size="small"
-        [icon]="isDark ? 'pi pi-sun' : 'pi pi-moon'"
-        (click)="toggleDarkMode()"
-        [rounded]="true"
-        pTooltip="Alternar Modo Oscuro"
-      ></p-button>
-    </div>
-  </p-toolbar>
-
-  <p-sidebar
-    [(visible)]="sidebarVisible"
-    [modal]="isMobile"
-    [fullScreen]="isMobile"
-    [showCloseIcon]="false"
-    [dismissible]="true"
-    position="left"
-    styleClass="app-sidebar-panel"
-  >
-    <div class="sidebar-header">
-      <i class="pi pi-shield" style="font-size: 4rem; color: var(--primary-color);"></i>
-    </div>
-
-    <div class="sidebar-spacer"></div>
-
-    <p-panelMenu [model]="sideMenuItems" styleClass="app-sidebar-menu"></p-panelMenu>
-  </p-sidebar>
-
-  <main class="app-main-content">
+    <main class="app-main-content flex-grow" [ngClass]="{'app-main-content-shifted': sidebarVisible && !isMobile}">
     <div class="app-content-area">
+
       <router-outlet></router-outlet>
+
     </div>
   </main>
 </div>

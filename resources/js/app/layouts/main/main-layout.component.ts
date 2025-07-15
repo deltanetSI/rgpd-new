@@ -1,14 +1,10 @@
-// main-layout.component.ts
-import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID, HostListener } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, OnInit, OnDestroy, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common'; // Asegúrate de importar isPlatformBrowser
+import { RouterOutlet } from '@angular/router';
+import { RippleModule } from 'primeng/ripple';
 
-import { ToolbarModule } from 'primeng/toolbar';
-import { ButtonModule } from 'primeng/button';
-import { SidebarModule } from 'primeng/sidebar';
-import { PanelMenuModule } from 'primeng/panelmenu';
-import { TooltipModule } from 'primeng/tooltip';
-import { MenuItem } from 'primeng/api';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { MenubarComponent } from '../menubar/menubar.component';
 
 @Component({
   selector: 'app-main-layout',
@@ -16,11 +12,9 @@ import { MenuItem } from 'primeng/api';
   imports: [
     CommonModule,
     RouterOutlet,
-    ToolbarModule,
-    ButtonModule,
-    SidebarModule,
-    PanelMenuModule,
-    TooltipModule
+    SidebarComponent,
+    MenubarComponent,
+    RippleModule
   ],
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.css']
@@ -29,85 +23,55 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   sidebarVisible: boolean = true;
   isDark: boolean = false;
   isMobile: boolean = false;
-  sideMenuItems: MenuItem[] = [];
 
-  // Indica si el icono del navbar debe estar visible.
-  // Lo usaremos para aplicar una clase CSS de fade-out.
-  isNavbarLogoVisible: boolean = true;
-
-
+  // Inyecta PLATFORM_ID en el constructor
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   @HostListener('window:resize')
   onWindowResize(): void {
-    this.checkMobileStatus();
-    // Reajusta la visibilidad del sidebar y del icono del navbar al redimensionar.
-    this.sidebarVisible = !this.isMobile;
-    this.updateNavbarLogoVisibility();
+    // Protección para el entorno del navegador
+    if (isPlatformBrowser(this.platformId)) {
+      this.checkMobileStatus();
+      this.sidebarVisible = !this.isMobile;
+    }
   }
 
   ngOnInit() {
-    this.checkMobileStatus();
-
-    this.sideMenuItems = [
-      {
-        label: 'Dashboard',
-        icon: 'pi pi-home',
-        routerLink: '/dashboard'
-      },
-      {
-        label: 'Gestión',
-        icon: 'pi pi-cog',
-        items: [
-          { label: 'Usuarios', icon: 'pi pi-users', routerLink: '/users' },
-          { label: 'Roles', icon: 'pi pi-lock', routerLink: '/roles' }
-        ]
-      },
-      {
-        label: 'Reportes',
-        icon: 'pi pi-chart-bar',
-        items: [
-          { label: 'Ventas', icon: 'pi pi-dollar', routerLink: '/sales-report' },
-          { label: 'Actividad', icon: 'pi pi-chart-line', routerLink: '/activity-report' }
-        ]
-      },
-      {
-        label: 'Ayuda',
-        icon: 'pi pi-question-circle',
-        routerLink: '/help'
-      }
-    ];
-
-    // Inicializa el sidebar: visible en PC, oculto en móvil.
-    this.sidebarVisible = !this.isMobile;
-    this.updateNavbarLogoVisibility();
-  }
-
-  ngOnDestroy(): void {}
-
-  checkMobileStatus(): void {
+    // TODO ESTO SOLO DEBE EJECUTARSE EN EL NAVEGADOR
     if (isPlatformBrowser(this.platformId)) {
-      this.isMobile = window.innerWidth <= 768;
+      this.checkMobileStatus();
+      this.loadDarkModeStatus();
+      // Inicializa el sidebar: visible en PC, oculto en móvil.
+      this.sidebarVisible = !this.isMobile;
     }
   }
 
-  // Alterna la visibilidad del sidebar y actualiza la visibilidad del icono del navbar.
+  ngOnDestroy(): void { }
+
+  // checkMobileStatus ya no necesita el "if" interno si todas sus llamadas están protegidas
+  checkMobileStatus(): void {
+    this.isMobile = window.innerWidth <= 768;
+  }
+
   toggleSidebar(): void {
     this.sidebarVisible = !this.sidebarVisible;
-    this.updateNavbarLogoVisibility();
   }
 
-  toggleDarkMode() {
-    this.isDark = !this.isDark;
+  toggleDarkMode(): void {
+    // Protección para el entorno del navegador
     if (isPlatformBrowser(this.platformId)) {
+      this.isDark = !this.isDark;
       document.documentElement.classList.toggle('app-dark', this.isDark);
+      localStorage.setItem('darkModeEnabled', this.isDark.toString());
     }
   }
 
-  // Controla cuándo el icono del navbar debe desvanecerse.
-  updateNavbarLogoVisibility(): void {
-    // El icono solo se desvanece si estamos en escritorio Y el sidebar está visible.
-    // Si es móvil, o si el sidebar no está visible, el icono se mantiene visible.
-    this.isNavbarLogoVisible = this.isMobile || !this.sidebarVisible;
+  loadDarkModeStatus(): void {
+    // Protección para el entorno del navegador
+    if (isPlatformBrowser(this.platformId)) {
+      const savedMode = localStorage.getItem('darkModeEnabled');
+      this.isDark = (savedMode === 'true');
+      document.documentElement.classList.toggle('app-dark', this.isDark);
+    }
   }
 }

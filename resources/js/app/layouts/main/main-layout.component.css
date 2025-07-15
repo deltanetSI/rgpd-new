@@ -13,7 +13,6 @@
   top: 0;
   left: 0;
   z-index: 1001;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background-color: var(--surface-card);
   color: var(--text-color);
   display: flex;
@@ -104,67 +103,63 @@
     color: var(--text-color);
 }
 
+
+
+
+
+
+
+/* ... tus estilos de .app-layout-wrapper, .app-navbar, .app-sidebar-panel ... */
+
 .app-main-content {
   flex-grow: 1;
-  padding-top: 4rem;
-  background-color: var(--surface-ground);
   overflow-y: auto;
   position: relative;
-  height: calc(100vh - 4rem);
-  margin-left: 0;
   transition: margin-left 0.3s ease-in-out;
 }
 
 .app-content-area {
   flex-grow: 1;
-  padding: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 1.5rem; /* Padding interno para el contenido */
 }
 
-/* Botón de alternar sidebar: Ahora siempre dentro del navbar */
-.sidebar-toggle-button {
-  transition: margin-left 0.3s ease-in-out;
-  /* margin-left: 0; por defecto estará al inicio del grupo start */
-  color: var(--text-color);
-  z-index: 1002;
-  /* Aseguramos que no se aplique un margen adicional que pueda desalinearlo en móvil */
-  margin-left: 0 !important; /* Añadimos !important para anular posibles estilos de PrimeNG */
-}
 
-/* Media Query para escritorio:
-   Cuando el sidebar está visible en escritorio, desplaza el botón. */
+/* Media Query para escritorio */
 @media (min-width: 769px) {
-  .sidebar-toggle-button.sidebar-toggle-button-shifted {
-    /* Este margen es CRUCIAL. Mueve el botón a la derecha del sidebar.
-       18rem es el ancho del sidebar. Unos 19rem a 19.5rem deberían ser suficientes.
-       Probemos con 19.5rem para asegurar visibilidad. */
-    margin-left: 20rem !important; /* Ajusta este valor si necesitas moverlo más */
+  .app-main-content.app-main-content-shifted { /* Usamos la clase de ngClass */
+    margin-left: 18rem; /* Ancho del sidebar */
   }
 
-  /* Cuando el sidebar está visible en escritorio, el contenido principal debe tener un margen */
-  .app-main-content {
-      margin-left: 18rem;
-  }
-
-  /* Si el sidebar está colapsado en escritorio, el contenido principal no tiene margen */
-  .app-main-content.sidebar-collapsed {
-      margin-left: 0;
+  /* Si quieres un "max-width" para el contenido, aplícalo dentro de .app-content-area,
+     y considera si quieres que siempre ocupe el 100% menos el sidebar, o un máximo.
+     Si quieres que el contenido ocupe *toda la pantalla* disponible:
+     No añadas max-width a .app-content-area aquí.
+     Si quieres que se centre pero ocupe la mayor parte del espacio:
+  */
+  .app-content-area {
+    /* Aquí puedes reintroducir max-width y margin: auto si el diseño lo requiere
+       para evitar que el contenido se estire demasiado en pantallas muy anchas,
+       pero sin desplazarlo cuando el sidebar no está abierto. */
+    max-width: 1200px; /* O el ancho máximo que prefieras */
+    margin: 0 auto;
   }
 }
 
 /* Media Queries para dispositivos móviles */
 @media (max-width: 768px) {
-  /* En móvil, el botón siempre se queda a la izquierda, ya que el sidebar es modal. */
   .sidebar-toggle-button {
-    margin-left: 0 !important; /* Aseguramos que no se mueva */
+    margin-left: 0 !important;
   }
-  /* En móvil, el contenido principal siempre ocupa todo el ancho, ya que el sidebar es modal. */
   .app-main-content {
-    margin-left: 0;
+    margin-left: 0; /* En móvil, el contenido principal siempre ocupa todo el ancho */
   }
 }
 
 .app-navbar .p-button.p-button-text {
   color: var(--text-color);
 }
+
+
+
+
+
