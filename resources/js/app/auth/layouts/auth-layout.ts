@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'auth-layout',
+  selector: 'app-auth-layout',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -10,9 +10,9 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         <!-- Columna izquierda: contenido centrado -->
         <div class="w-full md:w-1/2 flex flex-col justify-center items-center p-8 md:p-12 h-full">
           <div class="w-full max-w-sm">
-            <ng-content select="[auth-header]"></ng-content>
-            <ng-content></ng-content>
-            <ng-content select="[auth-footer]"></ng-content>
+        <ng-content select="[auth-header]"></ng-content>
+        <ng-content></ng-content>
+        <ng-content select="[auth-footer]"></ng-content>
           </div>
         </div>
         <!-- Columna derecha: favicon centrado sobre fondo gris claro -->
