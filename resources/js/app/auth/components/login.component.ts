@@ -1,17 +1,16 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { AuthLayout } from '../layouts/auth-layout';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth-login',
   standalone: true,
-  imports: [AuthLayout, ReactiveFormsModule, ButtonModule, InputTextModule],
+  imports: [ ReactiveFormsModule, ButtonModule, InputTextModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-auth-layout>
       <div auth-header>
         <h2 class="text-2xl font-bold text-center mb-2">Iniciar sesión</h2>
         <p class="text-center text-gray-500 mb-4">Accede a tu cuenta</p>
@@ -29,7 +28,6 @@ import { AuthService } from '../services/auth.service';
         <a href="#" class="text-sm text-blue-600 hover:underline">¿Olvidaste tu contraseña?</a>
         <a href="#" class="text-sm text-gray-500 hover:underline">¿No tienes cuenta? Regístrate</a>
       </div>
-    </app-auth-layout>
   `
 })
 export class LoginComponent {
@@ -42,13 +40,18 @@ export class LoginComponent {
   loading = false;
   error: string | null = null;
 
+  private router = inject(Router);
+
   onSubmit() {
     if (this.form.invalid) return;
     this.loading = true;
     this.error = null;
     const { email, password } = this.form.value;
     this.auth.login({ email: email ?? '', password: password ?? '' }).subscribe({
-      next: () => { this.loading = false; },
+      next: () => { 
+        this.loading = false; 
+        this.router.navigate(['']); // O ['/dashboard']
+      },
       error: (err: { error: { message: string; }; }) => {
         this.loading = false;
         this.error = err?.error?.message || 'Error al iniciar sesión';

@@ -1,9 +1,10 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-
+import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-auth-layout',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports:[RouterOutlet],
   template: `
     <div class="h-screen flex items-center justify-center bg-gray-100">
       <div class="w-full max-w-5xl bg-white rounded-xl shadow-lg flex overflow-hidden h-full">
@@ -11,7 +12,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
         <div class="w-full md:w-1/2 flex flex-col justify-center items-center p-8 md:p-12 h-full">
           <div class="w-full max-w-sm">
         <ng-content select="[auth-header]"></ng-content>
-        <ng-content></ng-content>
+        <router-outlet></router-outlet>
         <ng-content select="[auth-footer]"></ng-content>
           </div>
         </div>

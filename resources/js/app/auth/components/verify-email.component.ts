@@ -1,15 +1,13 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { AuthLayout } from '../layouts/auth-layout';
 import { ButtonModule } from 'primeng/button';
 import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-auth-verify-email',
   standalone: true,
-  imports: [AuthLayout, ButtonModule],
+  imports: [ButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <app-auth-layout>
       <div auth-header>
         <h2 class="text-2xl font-bold text-center mb-2">Verifica tu correo</h2>
         <p class="text-center text-gray-500 mb-4">Hemos enviado un enlace de verificación a tu correo electrónico.</p>
@@ -28,7 +26,6 @@ import { AuthService } from '../services/auth.service';
       <div auth-footer class="flex flex-col gap-2 text-center mt-4">
         <a href="#" class="text-sm text-gray-500 hover:underline">¿No recibiste el correo? Revisa tu carpeta de spam.</a>
       </div>
-    </app-auth-layout>
   `
 })
 export class VerifyEmailComponent {
