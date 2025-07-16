@@ -1,7 +1,6 @@
 
 .app-main-content {
   flex-grow: 1;
-  overflow-y: auto;
   position: relative;
   transition: margin-left 0.3s ease-in-out;
 }
@@ -32,7 +31,21 @@
 }
 
 
+app-menubar {
+  transition: margin-left 0.3s ease-in-out;
+}
 
+@media (min-width: 769px) {
+  .app-main-content.app-main-content-shifted { 
+    margin-left: 17rem; 
+  }
+
+  app-menubar.app-menubar-shifted {
+    margin-left: 17rem;
+  }
+
+ 
+}
 
 
 

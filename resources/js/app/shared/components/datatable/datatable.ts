@@ -1,12 +1,19 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
-import { TableModule } from 'primeng/table';
+import { Table, TableModule } from 'primeng/table'; 
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { TooltipModule } from 'primeng/tooltip';
 import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon'; // ¡Añade esta línea!
+import { InputIconModule } from 'primeng/inputicon';
+
+export interface ColumnConfig {
+  field: string;
+  header: string;
+  filter?: boolean;
+  minWidth?: string; 
+}
 
 @Component({
   selector: 'app-datatable',
@@ -19,22 +26,30 @@ import { InputIconModule } from 'primeng/inputicon'; // ¡Añade esta línea!
     TooltipModule,
     FormsModule,
     IconFieldModule,
-    InputIconModule 
+    InputIconModule
   ],
   templateUrl: './datatable.html',
   styleUrls: ['./datatable.css']
 })
-export class Datatable {
+export class Datatable<T extends object> { // <T extends object> para asegurar que sea un objeto
 
-  @Input() columns: { field: string; header: string; filter?: boolean }[] = [];
-  @Input() data: any[] = [];
-  @Input() globalFilterFields: string[] = [];
+  @ViewChild('dt') dt!: Table;
+
+  @Input() columns: ColumnConfig[] = [];
+  @Input() data: T[] = [];
+
   @Input() rows = 10;
   @Input() rowsPerPageOptions = [10, 25, 50];
 
-  @Output() edit = new EventEmitter<any>();
-  @Output() delete = new EventEmitter<any>();
+  globalFilterValue = '';
+  showColumnFilters = false;
 
-  globalFilterValue: string = '';
+  // Habilitar para aquellas que tienen filtro true
+  get globalFilterFields(): string[] {
+    return this.columns.filter(col => col.filter).map(col => col.field);
+  }
 
+  toggleColumnFilters(): void {
+    this.showColumnFilters = !this.showColumnFilters;
+  }
 }
