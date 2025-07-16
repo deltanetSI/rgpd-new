@@ -1,0 +1,24 @@
+.app-sidebar-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-row-bottom {
+  padding-bottom: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 1rem;
+}
+
+.app-sidebar-menu {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-bottom: 1rem; /* Pequeño espacio al final del menú antes del footer */
+}
+

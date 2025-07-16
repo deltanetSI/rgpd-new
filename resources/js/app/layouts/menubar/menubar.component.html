@@ -1,0 +1,26 @@
+<p-toolbar styleClass="app-navbar">
+
+  
+  <div class="p-toolbar-group-start">
+    <p-button
+      icon='pi pi-bars'
+      (click)="onToggleSidebar()"
+      [text]="true"
+      pTooltip="Mostrar sidebar"
+      class="p-button-text"
+    ></p-button>
+  </div>
+
+  <div class="p-toolbar-group-end">
+ 
+
+    <p-button
+      size="small"
+      [icon]="isDark ? 'pi pi-sun' : 'pi pi-moon'"
+      (click)="onToggleDarkMode()"
+      [rounded]="true"
+      [text]="true"
+      pTooltip="Alternar modo oscuro"
+    ></p-button>
+  </div>
+</p-toolbar>

@@ -1,0 +1,24 @@
+<div class="organization-page-container">
+  
+  <p-toolbar styleClass="mb-6">
+    <div class="p-toolbar-group-start">
+      <h2 class="ml-2">Gestión de organizaciones</h2>
+    </div>
+    <div class="p-toolbar-group-end">
+      <p-button label="Añadir Organización" icon="pi pi-plus"></p-button>
+    </div>
+  </p-toolbar>
+
+  <div class="card">
+ 
+
+    <app-datatable [columns]="cols" [data]="organizations"
+      [globalFilterFields]="['name', 'contactPerson', 'phone', 'email', 'status']" [rows]="10"
+      [rowsPerPageOptions]="[10, 25, 50]" (edit)="handleEdit($event)"
+      (delete)="handleDelete($event)"></app-datatable>
+
+
+
+  </div>
+</div>
+

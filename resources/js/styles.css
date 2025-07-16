@@ -1,14 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
 
-
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import "primeicons/primeicons.css";
 @import "tailwindcss";
-@plugin "tailwindcss-primeui";
 
 
+
+
+/* Forzamos ancho del sidebar */
+.p-drawer-left {
+  width: 17rem !important;
+}
+
+/* Forzamos paddin superior del sidebar */
+.p-drawer-header {
+  padding: 0.5rem !important; 
+}
 
 html, body {
   height: 100%;
   min-height: 100vh;
   margin: 0;
   padding: 0;
+  font-family: Roboto;
+  font-size: 14px;
 }
