@@ -1,14 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
-import { Table, TableModule } from 'primeng/table'; // Importamos Table y TableModule
+import { TableModule } from 'primeng/table'; // Importamos Table y TableModule
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
-import { FilterService, FilterMatchMode } from 'primeng/api'; // Ya no importamos PrimeNGConfig de aquí
-import { LazyLoadEvent } from 'primeng/api'; // Para paginación y ordenación "lazy" (opcional, pero buena práctica)
-import { Datatable } from '../../shared/components/datatable/datatable';
+import { Datatable } from '../../../shared/components/datatable/datatable';
 
 
 interface Organization {
@@ -104,24 +102,22 @@ export class OrganizationComponent {
 
 
   cols = [
-    { field: 'name', header: 'Nombre', filter: true },
-    { field: 'companyName', header: 'Razón social', filter: true },
+    { field: 'name', header: 'Nombre', filter: true, minWidth: '360px' },
+    { field: 'companyName', header: 'Razón social', filter: true, minWidth: '300px' },
     { field: 'cif', header: 'CIF', filter: true },
     { field: 'dpd', header: 'DPD', filter: true },
-    { field: 'managers', header: 'Encargados', filter: true },
-    { field: 'user', header: 'Usuario', filter: true }
+    { field: 'managers', header: 'Encargados', filter: true, minWidth: '130px' },
+    { field: 'user', header: 'Usuario', filter: true, minWidth: '400px' }
   ];
 
   globalFilterFields = ['name', 'companyName', 'cif', 'dpd', 'managers', 'user'];
 
   handleEdit(organization: Organization) {
     console.log('Editar:', organization);
-    // Lógica para abrir modal de edición
   }
 
   handleDelete(organization: Organization) {
     console.log('Eliminar:', organization);
-    // Lógica para confirmar y borrar
   }
 
 

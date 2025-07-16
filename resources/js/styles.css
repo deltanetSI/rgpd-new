@@ -4,8 +4,6 @@
 @import "tailwindcss";
 
 
-
-
 /* Forzamos ancho del sidebar */
 .p-drawer-left {
   width: 17rem !important;
@@ -24,3 +22,4 @@ html, body {
   font-family: Roboto;
   font-size: 14px;
 }
+

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './auth/guards/auth.guard';
-import { MainLayoutComponent } from './layouts/main/main-layout.component';
+import { MainLayoutComponent } from './core/layouts/main/main-layout.component';
 
 export const routes: Routes = [
   {
@@ -24,7 +24,6 @@ export const routes: Routes = [
     loadComponent: () => import('./auth/components/verify-email.component').then(m => m.VerifyEmailComponent),
     canActivate: [authGuard]
   },
-
   
   {
     path: '',
@@ -32,8 +31,8 @@ export const routes: Routes = [
     //canActivate: [authGuard], // Protect these routes with authGuard
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // Default route after login
-      { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent) },
-      { path: 'organization', loadComponent: () => import('./features/organization/organization').then(m => m.OrganizationComponent) } 
+      { path: 'dashboard', loadComponent: () => import('./dashboard/components/dashboard/dashboard').then(m => m.DashboardComponent) },
+      { path: 'organization', loadComponent: () => import('./organizations/components/organization/organization').then(m => m.OrganizationComponent) } 
     ]
   },
 

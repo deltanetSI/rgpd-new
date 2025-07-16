@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common'; // Asegúrate de importar isPlatformBrowser
 import { RouterOutlet } from '@angular/router';
 import { RippleModule } from 'primeng/ripple';
@@ -19,13 +19,13 @@ import { MenubarComponent } from '../menubar/menubar.component';
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.css']
 })
-export class MainLayoutComponent implements OnInit, OnDestroy {
-  sidebarVisible: boolean = true;
-  isDark: boolean = false;
-  isMobile: boolean = false;
+export class MainLayoutComponent implements OnInit {
+  sidebarVisible = true;
+  isDark = false;
+  isMobile = false;
 
   // Inyecta PLATFORM_ID en el constructor
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
   @HostListener('window:resize')
   onWindowResize(): void {
@@ -45,8 +45,6 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
       this.sidebarVisible = !this.isMobile;
     }
   }
-
-  ngOnDestroy(): void { }
 
   // checkMobileStatus ya no necesita el "if" interno si todas sus llamadas están protegidas
   checkMobileStatus(): void {

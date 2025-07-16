@@ -1,53 +1,37 @@
-<div class="card">
-  <p-table
-    #dt
-    [value]="data"
-    dataKey="id"
-    [rows]="rows"
-    [rowsPerPageOptions]="rowsPerPageOptions"
-    [paginator]="true"
-    [globalFilterFields]="globalFilterFields"
-    [tableStyle]="{ 'min-width': '60rem' }"
-  >
+<div class="card overflow-x-auto" style="max-width: 100%">
+
+  <p-table #dt [value]="data" dataKey="id" [rows]="rows" [rowsPerPageOptions]="rowsPerPageOptions" [paginator]="true" [paginatorDropdownAppendTo]="'body'"
+    [globalFilterFields]="globalFilterFields" [scrollable]="true" scrollHeight="400px" >
     <ng-template pTemplate="caption">
+
       <div class="flex align-items-center justify-content-between">
 
+        <p-iconfield iconPosition="left">
+          <p-inputicon class="pi pi-search" />
+          <input type="text" pInputText [(ngModel)]="globalFilterValue"
+            (input)="dt.filterGlobal(globalFilterValue, 'contains')" placeholder="Buscar..." class="p-inputtext-sm" />
+        </p-iconfield>
 
-
-        
-<p-iconfield iconPosition="left">
-    
-  <p-inputicon class="pi pi-search" />
-
-  <input
-    type="text"
-    pInputText
-    [(ngModel)]="globalFilterValue"
-    (input)="dt.filterGlobal(globalFilterValue, 'contains')"
-    placeholder="Buscar..."
-    class="p-inputtext-sm"
-  />
-</p-iconfield>
+        <p-button
+          [icon]="showColumnFilters ? 'pi pi-filter-slash' : 'pi pi-filter'"
+          [label]="showColumnFilters ? 'Ocultar Filtros' : 'Mostrar Filtros'"
+          styleClass="p-button-outlined p-button-sm ml-2"
+          (onClick)="toggleColumnFilters()"
+        ></p-button>
 
       </div>
     </ng-template>
 
     <ng-template pTemplate="header">
       <tr>
-        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+        <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.minWidth]="col.minWidth || '80px'">
           {{ col.header }}
           <p-sortIcon [field]="col.field"></p-sortIcon>
         </th>
-        <th>Acciones</th>
       </tr>
-      <tr>
+      <tr *ngIf="showColumnFilters">
         <th *ngFor="let col of columns">
-          <p-columnFilter
-            *ngIf="col.filter"
-            [field]="col.field"
-            type="text"
-            display="menu"
-          ></p-columnFilter>
+          <p-columnFilter *ngIf="col.filter" [field]="col.field" type="text" display="menu"></p-columnFilter>
         </th>
         <th></th>
       </tr>
@@ -57,20 +41,6 @@
       <tr>
         <td *ngFor="let col of columns">
           {{ rowData[col.field] }}
-        </td>
-        <td>
-          <p-button
-            icon="pi pi-pencil"
-            styleClass="p-button-sm p-button-text p-button-warning mr-2"
-            pTooltip="Editar"
-            (onClick)="edit.emit(rowData)"
-          ></p-button>
-          <p-button
-            icon="pi pi-trash"
-            styleClass="p-button-sm p-button-text p-button-danger"
-            pTooltip="Eliminar"
-            (onClick)="delete.emit(rowData)"
-          ></p-button>
         </td>
       </tr>
     </ng-template>
