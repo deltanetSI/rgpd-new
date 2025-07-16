@@ -8,7 +8,6 @@ import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
 import { Datatable } from '../../../shared/components/datatable/datatable';
 
-
 interface Organization {
   id: number;
   name: string;
@@ -18,8 +17,6 @@ interface Organization {
   managers: string;
   user: string;
 }
-
-
 
 @Component({
   selector: 'app-organization',
@@ -37,8 +34,6 @@ interface Organization {
   templateUrl: './organization.html',
   styleUrls: ['./organization.css']
 })
-
-
 
 export class OrganizationComponent {
 

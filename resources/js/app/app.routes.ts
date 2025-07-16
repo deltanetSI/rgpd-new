@@ -31,8 +31,12 @@ export const routes: Routes = [
     //canActivate: [authGuard], // Protect these routes with authGuard
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // Default route after login
-      { path: 'dashboard', loadComponent: () => import('./dashboard/components/dashboard/dashboard').then(m => m.DashboardComponent) },
-      { path: 'organization', loadComponent: () => import('./organizations/components/organization/organization').then(m => m.OrganizationComponent) } 
+      { path: 'dashboard', loadComponent: () => import('./dashboard/components/dashboard/dashboard').then(m => m.DashboardComponent),
+        data: { title: 'Inicio' }
+      },
+      { path: 'organization', loadComponent: () => import('./organizations/components/organization/organization').then(m => m.OrganizationComponent),
+        data: { title: 'Gestión de organizaciones' }
+      } 
     ]
   },
 

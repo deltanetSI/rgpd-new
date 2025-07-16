@@ -1,8 +1,10 @@
-import { Component, OnInit, HostListener, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common'; // Asegúrate de importar isPlatformBrowser
+import { Component, OnInit, HostListener, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common'; 
 import { RouterOutlet } from '@angular/router';
 import { RippleModule } from 'primeng/ripple';
-
+import { Title } from '@angular/platform-browser';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { filter, map, mergeMap } from 'rxjs/operators';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { MenubarComponent } from '../menubar/menubar.component';
 
@@ -24,8 +26,10 @@ export class MainLayoutComponent implements OnInit {
   isDark = false;
   isMobile = false;
 
-  // Inyecta PLATFORM_ID en el constructor
-  constructor(@Inject(PLATFORM_ID) private platformId: object) {}
+  private platformId = inject(PLATFORM_ID);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+  private titleService = inject(Title);
 
   @HostListener('window:resize')
   onWindowResize(): void {
@@ -44,6 +48,26 @@ export class MainLayoutComponent implements OnInit {
       // Inicializa el sidebar: visible en PC, oculto en móvil.
       this.sidebarVisible = !this.isMobile;
     }
+
+
+    // Establecemos nombre de la página en el navegador
+
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        map(() => {
+          let route = this.activatedRoute;
+          while (route.firstChild) route = route.firstChild;
+          return route;
+        }),
+        mergeMap((route: ActivatedRoute) => route.data)
+      )
+      .subscribe((data: { title?: string }) => {
+        if (data['title']) {
+          this.titleService.setTitle(data['title']);
+        }
+      });
+
   }
 
   // checkMobileStatus ya no necesita el "if" interno si todas sus llamadas están protegidas

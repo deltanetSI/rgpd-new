@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core'; 
+import { Component, Input, ViewChild } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { Table, TableModule } from 'primeng/table'; 
 import { ButtonModule } from 'primeng/button';
@@ -31,12 +31,12 @@ export interface ColumnConfig {
   templateUrl: './datatable.html',
   styleUrls: ['./datatable.css']
 })
-export class Datatable {
+export class Datatable<T extends object> { // <T extends object> para asegurar que sea un objeto
 
   @ViewChild('dt') dt!: Table;
 
   @Input() columns: ColumnConfig[] = [];
-  @Input() data: any[] = [];
+  @Input() data: T[] = [];
 
   @Input() rows = 10;
   @Input() rowsPerPageOptions = [10, 25, 50];
