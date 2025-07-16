@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 // Endpoints de usuario autenticado
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    return response()->json($request->user());
 });
 
 // Ejemplo de rutas protegidas por roles y permisos

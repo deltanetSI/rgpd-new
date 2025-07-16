@@ -11,6 +11,11 @@ export class LoginUseCase {
 
   async execute(dto: LoginDto) {
     await this.csrf.getCsrfCookie(environment.apiBaseUrl).toPromise();
-    return this.http.post(`${environment.authUrl}/login`, dto, { withCredentials: true });
-  }
+    return this.http.post(`${environment.authUrl}/login`, dto, {
+      withCredentials: true,
+      headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    });  }
 } 

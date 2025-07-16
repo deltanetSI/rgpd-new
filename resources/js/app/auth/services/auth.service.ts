@@ -16,6 +16,7 @@ import { ResetPasswordUseCase } from '../usecases/reset-password.usecase';
 import { UpdatePasswordUseCase } from '../usecases/update-password.usecase';
 import { UpdateProfileUseCase } from '../usecases/update-profile.usecase';
 import { from, switchMap, tap } from 'rxjs';
+import { environment } from '../../core/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -31,23 +32,37 @@ export class AuthService {
   readonly user = computed(() => this.userSignal());
   readonly isAuthenticated = computed(() => !!this.userSignal());
 
-  getUser() {
-    return this.http.get<User>('/api/user', { withCredentials: true }).pipe(
-      tap(user => this.userSignal.set(user))
-    );
+  private userLoadedSignal = signal(false);
+  readonly userLoaded = computed(() => this.userLoadedSignal());
+
+  loadUser() {
+    //console.log('Llamando a /user');
+    this.http.get<User>(`${environment.apiUrl}/user`, { withCredentials: true })
+      .subscribe({
+        next: user => {
+          //console.log('Usuario cargado', user);
+          this.userSignal.set(user);
+          this.userLoadedSignal.set(true);
+        },
+        error: () => {
+          //console.log('Error al cargar usuario', err);
+          this.userSignal.set(null);
+          this.userLoadedSignal.set(true);
+        }
+      });
   }
 
   login(dto: LoginDto) {
     return from(this.loginUseCase.execute(dto)).pipe(
       switchMap(response => response),
-      tap(() => this.getUser().subscribe())
+      tap(() => this.loadUser())
     );
   }
 
   register(dto: RegisterDto) {
     return from(this.registerUseCase.execute(dto)).pipe(
       switchMap(response => response),
-      tap(() => this.getUser().subscribe())
+      tap(() => this.loadUser())
     );
   }
 
@@ -72,7 +87,7 @@ export class AuthService {
   updateProfile(dto: UpdateProfileDto) {
     return from(this.updateProfileUseCase.execute(dto)).pipe(
       switchMap(response => response),
-      tap(() => this.getUser().subscribe())
+      tap(() => this.loadUser())
     );
   }
 
@@ -82,11 +97,11 @@ export class AuthService {
     );
   }
 
-  hasRole(role: string): boolean {
+  /* hasRole(role: string): boolean {
     return !!this.user()?.roles?.includes(role);
   }
 
   hasPermission(permission: string): boolean {
     return !!this.user()?.permissions?.includes(permission);
-  }
+  } */
 } 
