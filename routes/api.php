@@ -6,7 +6,16 @@ use App\Http\Controllers\OrganizationController;
 
 // Endpoints de usuario autenticado
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    $user = $request->user();
+
+    return response()->json([
+        'id' => $user->id,
+        'name' => $user->name,
+        'email' => $user->email,
+        // Agrega los roles y permisos
+        'roles' => $user->getRoleNames(), // Devuelve un array de nombres de roles
+        'permissions' => $user->getAllPermissions()->pluck('name'), // Devuelve un array de nombres de permisos
+    ]);
 });
 
 // Ejemplo de rutas protegidas por roles y permisos
