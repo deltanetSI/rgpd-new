@@ -4,11 +4,6 @@
 @import "tailwindcss";
 
 
-/* Forzamos ancho del sidebar */
-.p-drawer-left {
-  width: 17rem !important;
-}
-
 /* Forzamos paddin superior del sidebar */
 .p-drawer-header {
   padding: 0.5rem !important; 

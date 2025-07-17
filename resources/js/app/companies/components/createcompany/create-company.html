@@ -1,0 +1,142 @@
+<p-dialog maskStyleClass="backdrop-blur-md" header="Crear Nueva Organización" [(visible)]="visible" [modal]="true"
+  [style]="{ width: '50rem' }" [closable]="false" (onHide)="onHideDialog()" styleClass="p-dialog-custom-style">
+  <ng-template #header>
+    <h3 class="text-lg font-semibold">Crear Organización</h3>
+  </ng-template>
+
+  <p-stepper [value]="activeStep" class="w-full flex flex-col">
+
+    <p-step-list class="pt-4">
+      <p-step [value]="1">Datos generales</p-step>
+      <p-step [value]="2">Datos RGPD</p-step>
+    </p-step-list>
+
+    <p-step-panels class="flex-grow md:pt-10">
+      <p-step-panel [value]="1">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="grid grid-cols-1 md:grid-cols-2 mt-6 gap-8">
+
+            <p-floatlabel class="w-full">
+              <input id="empresa" pInputText [(ngModel)]="organization.name" class="w-full" />
+              <label for="empresa">Nombre de la empresa</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="w-full">
+              <input id="direccion" pInputText [(ngModel)]="organization.address" class="w-full" />
+              <label for="direccion">Dirección</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="w-full">
+              <p-inputMask inputId="numeronif" mask="99999999?-A" [(ngModel)]="organization.nif"></p-inputMask>
+              <label for="numeronif">N.I.F/C.I.F</label>
+            </p-floatlabel>
+
+
+            <p-floatlabel class="w-full">
+              <p-inputMask inputId="telefono" mask="999 999 999" [(ngModel)]="organization.phone" class="w-full">
+              </p-inputMask>
+              <label for="telefono">Teléfono</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="w-full">
+              <input id="email" autocomplete="email" pInputText keyFilter="email" [(ngModel)]="organization.email" class="w-full" />
+              <label for="email">Correo electrónico</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="w-full">
+              <p-select inputId="tipo" [options]="organizationTypes" optionLabel="label" optionValue="value"
+                [(ngModel)]="organization.type" [editable]="false" class="w-full"></p-select>
+              <label for="email"> Tipo de organización</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="w-full">
+              <input id="localidad" pInputText [(ngModel)]="organization.city" class="w-full" />
+              <label for="localidad">Localidad</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="w-full">
+              <input id="provincia" pInputText [(ngModel)]="organization.province" class="w-full" />
+              <label for="provincia">Provincia</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="w-full">
+              <p-inputMask inputId="codigopostal" mask="99999" [(ngModel)]="organization.postalCode" class="w-full"></p-inputMask>
+              <label for="codigopostal">Código Postal</label>
+            </p-floatlabel>
+
+            <div class="flex justify-between items-center col-span-full">
+              <p-button label="Cancelar" severity="secondary" (onClick)="onCancel()" />
+              <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" (onClick)="activateCallback(2)" />
+            </div>
+          </div>
+        </ng-template>
+      </p-step-panel>
+
+      <p-step-panel [value]="2">
+        <ng-template #content let-activateCallback="activateCallback">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+
+            <p-floatlabel class="w-full col-span-full">
+              <textarea style="max-height: 110px; min-height: 50px; overflow: auto;" id="actividad" pInputTextarea
+                rows="3" [(ngModel)]="organization.activityDescription" class="w-full"></textarea>
+              <label for="actividad">Descripción de actividad</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="w-full">
+              <input id="emailDerechos" pInputText keyFilter="email" [(ngModel)]="organization.rightsEmail"
+                class="w-full" />
+              <label for="emailDerechos">Email para ejercicio de derechos</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="w-full">
+              <input id="web" pInputText keyFilter="url" [(ngModel)]="organization.website" class="w-full" />
+              <label for="web">Sitio web</label>
+            </p-floatlabel>
+
+            <p-floatlabel class="w-full mt-2">
+              <p-inputNumber inputId="empleados" [(ngModel)]="organization.numEmployees" class="w-full"></p-inputNumber>
+              <label for="empleados">Número de empleados</label>
+            </p-floatlabel>
+
+            <div class="grid grid-cols-2 gap-4 col-span-full">
+              <div class="flex items-center">
+                <p-checkbox inputId="externalHosting" name="rgpdOptions" [(ngModel)]="organization.externalHosting"
+                  [binary]="true" />
+                <label for="externalHosting" class="ml-2">Hosting externo</label>
+              </div>
+              <div class="flex items-center">
+                <p-checkbox inputId="dataTransfers" name="rgpdOptions" [(ngModel)]="organization.dataTransfers"
+                  [binary]="true" />
+                <label for="dataTransfers" class="ml-2">Realiza cesiones de datos</label>
+              </div>
+              <div class="flex items-center">
+                <p-checkbox inputId="internationalTransfers" name="rgpdOptions"
+                  [(ngModel)]="organization.internationalTransfers" [binary]="true" />
+                <label for="internationalTransfers" class="ml-2">Transferencias internacionales</label>
+              </div>
+              <div class="flex items-center">
+                <p-checkbox inputId="massMailing" name="rgpdOptions" [(ngModel)]="organization.massMailing"
+                  [binary]="true" />
+                <label for="massMailing" class="ml-2">Realiza mailing masivo</label>
+              </div>
+            </div>
+
+
+            <div class="flex justify-between items-center col-span-full">
+              <p-button label="Cancelar" severity="secondary" (onClick)="onCancel()" />
+
+              <div class="flex gap-4">
+                <p-button label="Volver" severity="secondary" icon="pi pi-arrow-left" (onClick)="activateCallback(1)" />
+
+                <p-button label="Guardar" icon="pi pi-check" severity="success" (onClick)="saveOrganization()" />
+              </div>
+            </div>
+
+
+
+          </div>
+        </ng-template>
+      </p-step-panel>
+    </p-step-panels>
+  </p-stepper>
+</p-dialog>

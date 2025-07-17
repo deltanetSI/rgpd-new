@@ -1,16 +1,17 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { DrawerModule } from 'primeng/drawer';
-import { PanelMenu } from 'primeng/panelmenu';
+import { PanelMenuModule } from 'primeng/panelmenu';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
   standalone: true,
-  imports: [DrawerModule, PanelMenu, ButtonModule, CommonModule]
+  imports: [DrawerModule, PanelMenuModule, ButtonModule, CommonModule, TooltipModule]
 })
 export class SidebarComponent {
 
@@ -23,12 +24,22 @@ export class SidebarComponent {
     {
       label: 'Inicio',
       icon: 'pi pi-home',
-      routerLink: '/dashboard'
+      routerLink: '/dashboard',
     },
     {
       label: 'Organización',
       icon: 'pi pi-building-columns',
-      routerLink: '/organization'
+      items: [ 
+          {
+            label: 'Usuarios',
+            icon: 'pi pi-users', 
+            routerLink: '/organization/users' 
+          },
+          {
+            label: 'Responsables',
+            icon: 'pi pi-user-plus', 
+            routerLink: '/organization/companies' 
+          }]
     },
     
 

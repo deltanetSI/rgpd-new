@@ -7,8 +7,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
 import { Datatable } from '../../../shared/components/datatable/datatable';
+import { Createcompany } from '../createcompany/create-company';
 
-interface Organization {
+interface Company {
   id: number;
   name: string;
   companyName: string;
@@ -19,7 +20,7 @@ interface Organization {
 }
 
 @Component({
-  selector: 'app-organization',
+  selector: 'app-company',
   standalone: true,
   imports: [
     CommonModule,
@@ -29,16 +30,19 @@ interface Organization {
     InputTextModule,
     DialogModule,
     FormsModule,
-    Datatable
+    Datatable,
+    Createcompany
   ],
-  templateUrl: './organization.html',
-  styleUrls: ['./organization.css']
+  templateUrl: './companies.html',
+  styleUrls: ['./companies.css']
 })
 
 export class OrganizationComponent {
 
+  showDialogFlag = false;
+
   // Datos de prueba
-  organizations: Organization[] = [
+  companies: Company[] = [
     {
       id: 1,
       name: 'Asociación de Titulados en Ingeniería Informática',
@@ -95,25 +99,18 @@ export class OrganizationComponent {
     }
   ];
 
-
   cols = [
-    { field: 'name', header: 'Nombre', filter: true, minWidth: '360px' },
+    { field: 'name', header: 'Nombre', filter: true, minWidth: '300px' },
     { field: 'companyName', header: 'Razón social', filter: true, minWidth: '300px' },
     { field: 'cif', header: 'CIF', filter: true },
     { field: 'dpd', header: 'DPD', filter: true },
     { field: 'managers', header: 'Encargados', filter: true, minWidth: '130px' },
-    { field: 'user', header: 'Usuario', filter: true, minWidth: '400px' }
+    { field: 'user', header: 'Usuario', filter: true, minWidth: '300px' }
   ];
 
   globalFilterFields = ['name', 'companyName', 'cif', 'dpd', 'managers', 'user'];
 
-  handleEdit(organization: Organization) {
-    console.log('Editar:', organization);
+  handleDialogClose() {
+    this.showDialogFlag = false;
   }
-
-  handleDelete(organization: Organization) {
-    console.log('Eliminar:', organization);
-  }
-
-
 }

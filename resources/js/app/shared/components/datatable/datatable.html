@@ -1,6 +1,11 @@
+
+<ng-container *ngIf="isBrowser; else loadingSkeleton">
+
+
 <div class="card overflow-x-auto" style="max-width: 100%">
 
-  <p-table #dt [value]="data" dataKey="id" [rows]="rows" [rowsPerPageOptions]="rowsPerPageOptions" [paginator]="true" [paginatorDropdownAppendTo]="'body'"
+  <p-table #dt [value]="data" dataKey="id" [rows]="rows" [rowsPerPageOptions]="rowsPerPageOptions" [paginator]="true"
+    [paginatorStyleClass]="'custom-paginator-style'" [paginatorDropdownAppendTo]="'body'"
     [globalFilterFields]="globalFilterFields" [scrollable]="true" scrollHeight="400px" >
     <ng-template pTemplate="caption">
 
@@ -9,7 +14,7 @@
         <p-iconfield iconPosition="left">
           <p-inputicon class="pi pi-search" />
           <input type="text" pInputText [(ngModel)]="globalFilterValue"
-            (input)="dt.filterGlobal(globalFilterValue, 'contains')" placeholder="Buscar..." class="p-inputtext-sm" />
+            (input)="dt.filterGlobal(globalFilterValue, 'contains')" id="buscartabla" placeholder="Buscar..." class="p-inputtext-sm" />
         </p-iconfield>
 
         <p-button
@@ -52,3 +57,46 @@
     </ng-template>
   </p-table>
 </div>
+
+</ng-container>
+
+
+<ng-template #loadingSkeleton>
+    <div class="card overflow-x-hidden" style="max-width: 100%">
+        <p-table [value]="data" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th [style.minWidth]="'40px'">
+                        <p-skeleton></p-skeleton>
+                    </th>
+                      <th [style.minWidth]="'160px'">
+                        <p-skeleton></p-skeleton>
+                    </th>
+                      <th [style.minWidth]="'100px'">
+                        <p-skeleton></p-skeleton>
+                    </th>
+                      <th [style.minWidth]="'60px'">
+                        <p-skeleton></p-skeleton>
+                    </th>
+                    
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body">
+                <tr *ngFor="let i of [1,1]">
+                    <td >
+                        <p-skeleton></p-skeleton>
+                    </td>
+                    <td >
+                        <p-skeleton></p-skeleton>
+                    </td>
+                    <td >
+                        <p-skeleton></p-skeleton>
+                    </td>
+                    <td >
+                        <p-skeleton></p-skeleton>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</ng-template>
