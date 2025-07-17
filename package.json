@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:resources/js": "node dist/resources/js/server/server.mjs",
-    "start:angular": "ng serve --host 127.0.0.1 --port 4200 ",
+    "start:angular": "ng serve --host 127.0.0.1 --port 4200",
     "start:ssr": "node public/build/server/server.mjs",
     "lint": "ng lint"
   },

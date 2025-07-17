@@ -23,6 +23,10 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
 };
 
 function getCookie(name: string): string | null {
+  if (typeof document === 'undefined') {
+    // Estamos en SSR o en un entorno sin DOM
+    return null;
+  }
   const nameEQ = `${name}=`;
   const cookies = document.cookie.split(';');
   for (const cookie of cookies) {

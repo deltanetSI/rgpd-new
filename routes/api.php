@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrganizationController;
 
 // Endpoints de usuario autenticado
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -15,4 +16,8 @@ Route::middleware(['auth:sanctum', 'role:admin'])->get('/admin', function () {
 
 Route::middleware(['auth:sanctum', 'permission:edit articles'])->post('/articles', function () {
     return response()->json(['message' => 'Solo para usuarios con permiso de editar artículos']);
+});
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::apiResource('organizations', OrganizationController::class);
 });

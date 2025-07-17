@@ -49,8 +49,10 @@ export class LoginComponent {
     const { email, password } = this.form.value;
     this.auth.login({ email: email ?? '', password: password ?? '' }).subscribe({
       next: () => { 
+        
         this.loading = false; 
-        this.router.navigate(['']); // O ['/dashboard']
+        //console.log('esta funcionando el next??');
+        this.router.navigate(['']); 
       },
       error: (err: { error: { message: string; }; }) => {
         this.loading = false;
