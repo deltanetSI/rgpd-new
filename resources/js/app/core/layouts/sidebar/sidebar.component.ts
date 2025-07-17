@@ -1,10 +1,12 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { DrawerModule } from 'primeng/drawer';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
+import { AuthService } from '../../../auth/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -19,6 +21,9 @@ export class SidebarComponent {
   @Input() modal = true;
   @Input() fullScreen = false;
 
+    private authService = inject(AuthService);
+    private router = inject(Router);
+   
 
     menuItems: MenuItem[] = [ // Definición directa del array MenuItem[]
     {
@@ -53,6 +58,23 @@ export class SidebarComponent {
 
 
   // Panel de control
+
+ logout(){
+
+    this.authService.logout().subscribe({
+      next: () => {
+       
+            this.router.navigate(['/auth/login']);
+
+      },
+      error: (error) => {
+        console.error('Error al cerrar sesión:', error);
+      }
+    });
+
+    
+
+  }
 
 
 }

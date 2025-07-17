@@ -10,7 +10,10 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
 
   if (xsrfToken) {
     apiReq = apiReq.clone({
-      headers: apiReq.headers.set('X-XSRF-TOKEN', xsrfToken)
+      headers: apiReq.headers
+        .set('X-XSRF-TOKEN', xsrfToken)
+        .set('Accept', 'application/json')
+        .set('X-Requested-With', 'XMLHttpRequest')
     });
   }
 
