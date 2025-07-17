@@ -31,6 +31,8 @@ export class MainLayoutComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private titleService = inject(Title);
 
+  isBrowser = isPlatformBrowser(this.platformId);
+
   @HostListener('window:resize')
   onWindowResize(): void {
     // Protección para el entorno del navegador

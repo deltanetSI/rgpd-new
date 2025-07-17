@@ -1,5 +1,5 @@
-import { Component, Input, ViewChild } from '@angular/core'; 
-import { CommonModule } from '@angular/common';
+import { Component, Input, ViewChild, inject, PLATFORM_ID} from '@angular/core'; 
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Table, TableModule } from 'primeng/table'; 
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { TooltipModule } from 'primeng/tooltip';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { SkeletonModule } from 'primeng/skeleton';
 
 export interface ColumnConfig {
   field: string;
@@ -26,7 +27,8 @@ export interface ColumnConfig {
     TooltipModule,
     FormsModule,
     IconFieldModule,
-    InputIconModule
+    InputIconModule,
+    SkeletonModule
   ],
   templateUrl: './datatable.html',
   styleUrls: ['./datatable.css']
@@ -40,6 +42,9 @@ export class Datatable<T extends object> { // <T extends object> para asegurar q
 
   @Input() rows = 10;
   @Input() rowsPerPageOptions = [10, 25, 50];
+
+  // Inyecciones
+  isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   globalFilterValue = '';
   showColumnFilters = false;

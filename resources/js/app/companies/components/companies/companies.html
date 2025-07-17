@@ -1,0 +1,27 @@
+<div class="organization-page-container">
+  
+
+  <div class="card">
+    
+    
+  <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold ml-2">Responsables</h2>
+
+      <p-button 
+        label="Añadir responsable" 
+        icon="pi pi-plus" 
+        class="p-button-sm"
+        (onClick)="showDialogFlag = true">
+      </p-button>
+    </div>
+
+    <app-datatable [columns]="cols" [data]="companies"></app-datatable>
+
+  </div>
+</div>
+
+<app-create-company 
+    [visible]="showDialogFlag"
+    (dialogClosed)="handleDialogClose()">
+</app-create-company>
+
