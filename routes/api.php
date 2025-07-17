@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\UserController;
 
 // Endpoints de usuario autenticado
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -29,4 +30,5 @@ Route::middleware(['auth:sanctum', 'permission:edit articles'])->post('/articles
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('company', OrganizationController::class);
+    Route::apiResource('users', UserController::class);
 });
