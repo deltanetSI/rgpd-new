@@ -31,4 +31,5 @@ Route::middleware(['auth:sanctum', 'permission:edit articles'])->post('/articles
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('company', OrganizationController::class);
     Route::apiResource('users', UserController::class);
+    Route::apiResource('dpds', \App\Http\Controllers\DpdController::class);
 });

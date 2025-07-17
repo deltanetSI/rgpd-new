@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Hash;
+use App\Actions\Fortify\PasswordValidationRules;
 
 class UserController extends Controller implements HasMiddleware
 {
+    use PasswordValidationRules;
     /**
      * Asignación de permisos directamente en el controlador.
      */
@@ -37,7 +39,7 @@ class UserController extends Controller implements HasMiddleware
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
+            'password' => $this->passwordRules(),
             'roles' => 'nullable|array',
             'roles.*' => 'string',
         ]);
@@ -58,7 +60,7 @@ class UserController extends Controller implements HasMiddleware
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => 'sometimes|nullable|string|min:8',
+            'password' => ['sometimes', 'nullable', ...$this->passwordRules()],
             'roles' => 'nullable|array',
             'roles.*' => 'string',
         ]);
