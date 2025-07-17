@@ -36,7 +36,7 @@ class OrganizationController extends Controller implements HasMiddleware
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'type' => 'required|in:public,private',
+            'type' => 'required|in:Pública,Privada',
             'name' => 'required|string',
             'legal_name' => 'required|string',
             'registered_address' => 'required|string',
@@ -56,7 +56,7 @@ class OrganizationController extends Controller implements HasMiddleware
             'data_sharing' => 'boolean',
             'international_transfers' => 'boolean',
             'mass_mailing' => 'boolean',
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'nullable',//'required|exists:users,id',
             'dpd_id' => 'nullable|exists:users,id',
         ]);
         $organization = Organization::create($validated);
