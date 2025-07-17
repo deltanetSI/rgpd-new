@@ -28,5 +28,5 @@ Route::middleware(['auth:sanctum', 'permission:edit articles'])->post('/articles
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::apiResource('organizations', OrganizationController::class);
+    Route::apiResource('company', OrganizationController::class);
 });

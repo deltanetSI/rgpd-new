@@ -17,15 +17,17 @@ import { Router } from '@angular/router';
 })
 export class SidebarComponent {
 
+  @Output() visibleChange = new EventEmitter<boolean>();
+
   @Input() visible = false;
   @Input() modal = true;
   @Input() fullScreen = false;
 
-    private authService = inject(AuthService);
-    private router = inject(Router);
-   
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-    menuItems: MenuItem[] = [ // Definición directa del array MenuItem[]
+
+  menuItems: MenuItem[] = [ // Definición directa del array MenuItem[]
     {
       label: 'Inicio',
       icon: 'pi pi-home',
@@ -34,46 +36,38 @@ export class SidebarComponent {
     {
       label: 'Organización',
       icon: 'pi pi-building-columns',
-      items: [ 
-          {
-            label: 'Usuarios',
-            icon: 'pi pi-users', 
-            routerLink: '/organization/users' 
-          },
-          {
-            label: 'Responsables',
-            icon: 'pi pi-user-plus', 
-            routerLink: '/organization/companies' 
-          }]
+      items: [
+        {
+          label: 'Usuarios',
+          icon: 'pi pi-users',
+          routerLink: '/organization/users'
+        },
+        {
+          label: 'Responsables',
+          icon: 'pi pi-user-plus',
+          routerLink: '/organization/companies'
+        }]
     },
-    
+
 
   ];
 
-  @Output() visibleChange = new EventEmitter<boolean>();
 
   onHide() {
     this.visibleChange.emit(false);
   }
 
 
-  // Panel de control
-
- logout(){
-
+  logOut() {
     this.authService.logout().subscribe({
       next: () => {
-       
-            this.router.navigate(['/auth/login']);
+        this.router.navigate(['/auth/login']);
 
       },
       error: (error) => {
         console.error('Error al cerrar sesión:', error);
       }
     });
-
-    
-
   }
 
 

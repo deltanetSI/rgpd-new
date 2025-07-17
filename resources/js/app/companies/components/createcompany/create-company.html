@@ -27,7 +27,7 @@
             </p-floatlabel>
 
             <p-floatlabel class="w-full">
-              <p-inputMask inputId="numeronif" mask="99999999?-A" [(ngModel)]="organization.nif"></p-inputMask>
+              <p-inputMask inputId="numeronif" mask="99999999?-A" [(ngModel)]="organization.tax_id"></p-inputMask>
               <label for="numeronif">N.I.F/C.I.F</label>
             </p-floatlabel>
 
@@ -60,7 +60,7 @@
             </p-floatlabel>
 
             <p-floatlabel class="w-full">
-              <p-inputMask inputId="codigopostal" mask="99999" [(ngModel)]="organization.postalCode" class="w-full"></p-inputMask>
+              <p-inputMask inputId="codigopostal" mask="99999" [(ngModel)]="organization.postal_code" class="w-full"></p-inputMask>
               <label for="codigopostal">Código Postal</label>
             </p-floatlabel>
 
@@ -78,12 +78,12 @@
 
             <p-floatlabel class="w-full col-span-full">
               <textarea style="max-height: 110px; min-height: 50px; overflow: auto;" id="actividad" pInputTextarea
-                rows="3" [(ngModel)]="organization.activityDescription" class="w-full"></textarea>
+                rows="3" [(ngModel)]="organization.activity" class="w-full"></textarea>
               <label for="actividad">Descripción de actividad</label>
             </p-floatlabel>
 
             <p-floatlabel class="w-full">
-              <input id="emailDerechos" pInputText keyFilter="email" [(ngModel)]="organization.rightsEmail"
+              <input id="emailDerechos" pInputText keyFilter="email" [(ngModel)]="organization.exercise_rights_email"
                 class="w-full" />
               <label for="emailDerechos">Email para ejercicio de derechos</label>
             </p-floatlabel>
@@ -94,28 +94,28 @@
             </p-floatlabel>
 
             <p-floatlabel class="w-full mt-2">
-              <p-inputNumber inputId="empleados" [(ngModel)]="organization.numEmployees" class="w-full"></p-inputNumber>
+              <p-inputNumber inputId="empleados" [(ngModel)]="organization.number_of_employees" class="w-full"></p-inputNumber>
               <label for="empleados">Número de empleados</label>
             </p-floatlabel>
 
             <div class="grid grid-cols-2 gap-4 col-span-full">
               <div class="flex items-center">
-                <p-checkbox inputId="externalHosting" name="rgpdOptions" [(ngModel)]="organization.externalHosting"
+                <p-checkbox inputId="externalHosting" name="rgpdOptions" [(ngModel)]="organization.external_hosting"
                   [binary]="true" />
                 <label for="externalHosting" class="ml-2">Hosting externo</label>
               </div>
               <div class="flex items-center">
-                <p-checkbox inputId="dataTransfers" name="rgpdOptions" [(ngModel)]="organization.dataTransfers"
+                <p-checkbox inputId="dataTransfers" name="rgpdOptions" [(ngModel)]="organization.data_sharing"
                   [binary]="true" />
                 <label for="dataTransfers" class="ml-2">Realiza cesiones de datos</label>
               </div>
               <div class="flex items-center">
                 <p-checkbox inputId="internationalTransfers" name="rgpdOptions"
-                  [(ngModel)]="organization.internationalTransfers" [binary]="true" />
+                  [(ngModel)]="organization.international_transfers" [binary]="true" />
                 <label for="internationalTransfers" class="ml-2">Transferencias internacionales</label>
               </div>
               <div class="flex items-center">
-                <p-checkbox inputId="massMailing" name="rgpdOptions" [(ngModel)]="organization.massMailing"
+                <p-checkbox inputId="massMailing" name="rgpdOptions" [(ngModel)]="organization.mass_mailing"
                   [binary]="true" />
                 <label for="massMailing" class="ml-2">Realiza mailing masivo</label>
               </div>
