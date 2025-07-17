@@ -8,24 +8,30 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Organization extends Model
 {
     protected $fillable = [
-        'tipo',
-        'denominacion',
-        'razon_social',
-        'domicilio_social',
-        'pais',
-        'codigo_postal',
-        'cif',
-        'localidad',
-        'direccion',
-        'provincia',
-        'telefono',
+        'type',
+        'name',
+        'legal_name',
+        'registered_address',
+        'country',
+        'postal_code',
+        'tax_id',
+        'city',
+        'address',
+        'province',
+        'phone',
         'email',
-        'actividad',
-        'web',
-        'numero_empleados',
+        'activity',
+        'website',
+        'number_of_employees',
+        'exercise_rights_email',
+        'external_hosting',
+        'data_sharing',
+        'international_transfers',
+        'mass_mailing',
         'user_id',
         'dpd_id',
     ];
+
 
     public function user(): BelongsTo
     {
