@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './core/layouts/main/main-layout.component';
-//import { AuthLayout } from './auth/layouts/auth-layout';
-//import { authGuard } from './auth/guards/auth.guard';
+import { AuthLayout } from './auth/layouts/auth-layout';
+import { authGuard } from './auth/guards/auth.guard';
 
 export const routes: Routes = [
     {
         path: 'auth',
-        //component: AuthLayout, // layout de rutas de autenticacion
+        component: AuthLayout, // layout de rutas de autenticacion
         children: [
             { path: '', redirectTo: 'login', pathMatch: 'full' },
             {
@@ -51,7 +51,7 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent, // Use the main layout for authenticated routes
-    //canActivate: [authGuard], // Protect these routes with authGuard
+    canActivate: [authGuard], // Protect these routes with authGuard
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // Default route after login
       { path: 'dashboard', loadComponent: () => import('./dashboard/components/dashboard/dashboard').then(m => m.DashboardComponent),
@@ -60,7 +60,7 @@ export const routes: Routes = [
       { path: 'organization/companies', loadComponent: () => import('./companies/components/companies/companies').then(m => m.OrganizationComponent),
         data: { title: 'Responsables' }
       } ,
-      { path: 'organization/users', loadComponent: () => import('./companies/components/users/users').then(m => m.Users),
+      { path: 'organization/users', loadComponent: () => import('./users/components/users/users').then(m => m.Users),
         data: { title: 'Usuarios' }
       } ,
       { path: '**', redirectTo: 'dashboard' }

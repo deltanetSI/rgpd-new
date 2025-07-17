@@ -92,7 +92,7 @@ export class AuthService {
   }
 
   logout() {
-    return this.http.post('/logout', {}, { withCredentials: true }).pipe(
+    return this.http.post(`${environment.authUrl}/logout`, {}, { withCredentials: true }).pipe(
       tap(() => this.userSignal.set(null))
     );
   }
