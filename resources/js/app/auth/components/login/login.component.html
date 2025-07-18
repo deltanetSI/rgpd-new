@@ -62,7 +62,7 @@
                                 }
                             </div>
                             <div class="text-right">
-                                <a pButton type="button" label="¿Olvidaste tu contraseña?" class="p-button-link"> </a>
+                                <a pButton type="button" label="¿Olvidaste tu contraseña?" routerLink="/auth/forgot-password" class="p-button-link"> </a>
                             </div>
                         </div>
                     </div>
@@ -78,7 +78,9 @@
                 <div class="text-red-600 text-sm text-center mt-2">{{ error }}</div>
                 }
                 <div class="flex justify-end gap-2 mt-auto">
-                    <button pButton type="button" label="Crear cuenta" class="p-button-text"> </button>
+
+                    
+                    <a pButton type="button" label="Crear cuenta" [routerLink]="['/auth/register']" class="p-button-text"> </a>
                     <button pButton [loading]="loading" type="submit" label="Iniciar sesión"
                         [disabled]="form.invalid || loading"> </button>
                 </div>
