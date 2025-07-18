@@ -1,0 +1,17 @@
+<div class="auth-layout-container">
+  <div class="fixed top-4 right-4 z-50">
+    <div class="p-0 flex items-center justify-center">
+      <p-selectbutton
+        [options]="stateOptions"
+        [(ngModel)]="isDark"
+        optionLabel="label"
+        optionValue="value"
+        (onChange)="toggleDarkModeWithSelectButton({value: $event.value})"
+        aria-labelledby="basic"
+      >
+      </p-selectbutton>
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+</div>
