@@ -9,6 +9,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import customtheme from './customtheme';
+import { MessageService } from 'primeng/api';
 
 
 
@@ -25,6 +26,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
+    MessageService,
     provideRouter(routes), provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),
         providePrimeNG({

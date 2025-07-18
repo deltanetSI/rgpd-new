@@ -36,9 +36,9 @@ class OrganizationController extends Controller implements HasMiddleware
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'type' => 'required|in:Pública,Privada',
+            'type' => 'required|in:public,private',
             'name' => 'required|string',
-            'legal_name' => 'required|string',
+            'legal_name' =>'required|string',
             'registered_address' => 'required|string',
             'country' => 'required|string',
             'postal_code' => 'required|string',
