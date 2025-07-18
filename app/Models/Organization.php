@@ -40,6 +40,6 @@ class Organization extends Model
 
     public function dpd(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'dpd_id');
+        return $this->belongsTo(Dpd::class, 'dpd_id');
     }
 }
