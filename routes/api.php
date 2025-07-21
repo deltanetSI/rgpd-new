@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentationController;
+use App\Models\Organization;
 
 // Endpoints de usuario autenticado
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -46,4 +47,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('documentation/aepd', [DocumentationController::class, 'uploadAepdDocument']);
     Route::delete('documentation/aepd/{filename}', [DocumentationController::class, 'deleteAepdDocument']);
     Route::get('documentation/aepd/download/{filename}', [DocumentationController::class, 'downloadAepdDocument'])->name('documentation.download.aepd');
+
+    // Organizations
+    Route::get('companies/all', [OrganizationController::class, 'index']);
+
 });
