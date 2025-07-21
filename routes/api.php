@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentationController;
-use App\Models\Organization;
+use App\Http\Controllers\EmployeeImportController;
+
 
 // Endpoints de usuario autenticado
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -50,5 +51,20 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Organizations
     Route::get('companies/all', [OrganizationController::class, 'index']);
+  
+  
+    // Empleados
+    Route::post('employees/import', [EmployeeImportController::class, 'import']);
+    Route::get('employees/template', function () {
+        $path = storage_path('app/public/plantilla_empleados.csv');
+        if (!file_exists($path)) {
+            abort(404);
+        }
+        return response()->download($path, 'plantilla_empleados.csv', [
+            'Content-Type' => 'text/csv',
+        ]);
+    });
+    Route::get('/employees/download-zip', [EmployeeImportController::class, 'downloadZip'])->name('employees.downloadZip');
+    Route::post('/employees/send-contracts', [EmployeeImportController::class, 'sendContractsToEmployees']);
 
 });
