@@ -1,0 +1,22 @@
+<div class="aepd-page-container">
+    <div class="card">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold ml-2">Documentos Legales</h2>
+        <button pButton type="button" label="Añadir documento" icon="pi pi-upload" class="p-button-sm p-button-primary" (click)="fileInput.click()">
+          <span class="visually-hidden">Añadir documento</span>
+        </button>
+        <input #fileInput type="file" style="display:none" (change)="onFileChange($event)" />
+      </div>
+  
+      <p *ngIf="loading()" class="text-center p-4">Cargando documentos...</p>
+      <p *ngIf="message()" class="text-center p-2 text-green-700">{{ message() }}</p>
+  
+      <app-documentation-list class="w-1/3"
+        [input]="{ documents: documents(), action: onDelete.bind(this), actionIcon: 'pi pi-trash' }"
+      ></app-documentation-list>
+  
+      <!-- Confirmación de borrado -->
+      <p-confirmpopup/>
+    </div>
+  </div>
+  

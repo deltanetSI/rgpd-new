@@ -63,6 +63,13 @@ export const routes: Routes = [
       { path: 'organization/users', loadComponent: () => import('./users/components/users/users').then(m => m.Users),
         data: { title: 'Usuarios' }
       } ,
+      { path: 'documentation/aepd', loadComponent: () => import('./documentation/components/aepd/aepd').then(m => m.Aepd),
+        data: { title: 'Documentacion AEPD' }
+      } ,
+      { path: 'documentation/legal', loadComponent: () => import('./documentation/components/legal/legal').then(m => m.Legal),
+        data: { title: 'Documentacion Legal' }
+      } ,
+      
       { path: '**', redirectTo: 'dashboard' }
     ]
   },

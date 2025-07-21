@@ -1,0 +1,17 @@
+<ul class="doc-list">
+  @for (doc of documents(); track doc.name) {
+    <li class="doc-item" [class.doc-item-hover]="hovered === doc.name"
+        tabindex="0"
+        (mouseenter)="onHover(doc.name)" (mouseleave)="onHover(null)"
+        (click)="openDocument(doc.url, $event)"
+        (keydown.enter)="openDocument(doc.url, $event)"
+    >
+      <span class="doc-name">{{ doc.name }}</span>
+      @if (actionIcon() && onAction) {
+        <button pButton type="button" [icon]="actionIcon()" class="action-btn" (click)="onActionClick(doc, $event)">
+          <span class="visually-hidden">Acción</span>
+        </button>
+      }
+    </li>
+  }
+</ul>
