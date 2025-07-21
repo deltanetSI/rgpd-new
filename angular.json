@@ -16,9 +16,12 @@
             "outputPath": "public/build",
             "browser": "resources/js/main.ts",
             "tsConfig": "tsconfig.app.json",
-            "assets": [],
+            "assets": [
+              "resources/js/assets/favicon.ico",
+              "resources/js/assets"
+            ],
             "styles": [
-               "resources/js/styles.css"
+              "resources/js/styles.css"
             ],
             "server": "resources/js/main.server.ts",
             "outputMode": "server",

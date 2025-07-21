@@ -19,3 +19,6 @@ html, body {
   background-color: var(--p-surface-100); 
 }
 
+.p-popover:after, .p-popover:before {
+    left: calc(2.8rem + var(--p-popover-arrow-left))!important;
+}

@@ -18,8 +18,10 @@ export class CompanyService {
         return this.httpClient.post<CompanyResponseDto>(environment.apiUrl + "/company", CompanyDto);
     }
 
- 
-
+    // Obtener todas las compañías
+    getAllCompanies(): Observable<CompanyResponseDto[]> {
+        return this.httpClient.get<CompanyResponseDto[]>(`${environment.apiUrl}/companies/all`);
+    }
 
 
 

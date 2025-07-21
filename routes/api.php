@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\EmployeeImportController;
 
+
 // Endpoints de usuario autenticado
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     $user = $request->user();
@@ -48,6 +49,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('documentation/aepd/{filename}', [DocumentationController::class, 'deleteAepdDocument']);
     Route::get('documentation/aepd/download/{filename}', [DocumentationController::class, 'downloadAepdDocument'])->name('documentation.download.aepd');
 
+    // Organizations
+    Route::get('companies/all', [OrganizationController::class, 'index']);
+  
+  
     // Empleados
     Route::post('employees/import', [EmployeeImportController::class, 'import']);
     Route::get('employees/template', function () {
@@ -61,4 +66,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::get('/employees/download-zip', [EmployeeImportController::class, 'downloadZip'])->name('employees.downloadZip');
     Route::post('/employees/send-contracts', [EmployeeImportController::class, 'sendContractsToEmployees']);
+
 });

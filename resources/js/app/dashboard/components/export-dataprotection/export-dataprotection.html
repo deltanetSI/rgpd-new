@@ -1,0 +1,35 @@
+<p-card [style]="{ width: '25rem', height: '20rem', overflow: 'hidden' }">
+    <ng-template pTemplate="content">
+        <div class="flex flex-col h-full">
+
+            <div class="font-semibold text-lg mb-2 flex justify-between items-center">
+                <span>Exportar cláusula de empleados</span>
+                <i class="pi pi-question-circle" pTooltip="Permite subir un archivo excel con una lista de empleados y generar el documento de cláusula de protección de datos por cada uno de ellos" [autoHide]="false" tooltipPosition="right"></i>
+            </div>
+
+            <div class="relative flex items-center justify-center">
+                <div class="w-full h-full rounded-lg overflow-hidden relative">
+                    <img alt="Placeholder" class="w-full h-full object-cover" src="assets/images/backgroundexport2.png"
+                        class="filter grayscale" />
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                        <p-fileupload mode="basic" name="excel_file" accept=".xlsx,.xls" [auto]="true"
+                            [customUpload]="true" (uploadHandler)="onFileSelected($event)" chooseLabel="Subir Excel"
+                            chooseIcon="pi pi-upload">
+                        </p-fileupload>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-center flex-1 mt-4">
+                <p-button label="Descargar" icon="pi pi-download" iconPos="top" variant="outlined" severity="success"
+                    class="flex-1" styleClass="w-full !justify-start"></p-button>
+
+                <p-divider layout="vertical"></p-divider>
+
+                <p-button label="Enviar por email" icon="pi pi-envelope" iconPos="top" variant="outlined"
+                    severity="info" class="flex-1" styleClass="w-full !justify-start"></p-button>
+            </div>
+        </div>
+    </ng-template>
+</p-card>
