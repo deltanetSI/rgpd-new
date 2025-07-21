@@ -1,4 +1,4 @@
-<ul class="doc-list">
+<ul class="doc-list w-2/3">
   @for (doc of documents(); track doc.name) {
     <li class="doc-item" [class.doc-item-hover]="hovered === doc.name"
         tabindex="0"
@@ -8,7 +8,7 @@
     >
       <span class="doc-name">{{ doc.name }}</span>
       @if (actionIcon() && onAction) {
-        <button pButton type="button" [icon]="actionIcon()" class="action-btn" (click)="onActionClick(doc, $event)">
+        <button pButton type="button" [icon]="actionIcon()" class="action-btn " (click)="onActionClick(doc, $event)">
           <span class="visually-hidden">Acción</span>
         </button>
       }

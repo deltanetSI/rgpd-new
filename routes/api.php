@@ -46,4 +46,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('documentation/aepd', [DocumentationController::class, 'uploadAepdDocument']);
     Route::delete('documentation/aepd/{filename}', [DocumentationController::class, 'deleteAepdDocument']);
     Route::get('documentation/aepd/download/{filename}', [DocumentationController::class, 'downloadAepdDocument'])->name('documentation.download.aepd');
+
+    // Empleados
+    Route::post('employees/import', [\App\Http\Controllers\EmployeeImportController::class, 'import']);
+    Route::get('employees/template', function () {
+        $path = storage_path('app/public/plantilla_empleados.csv');
+        if (!file_exists($path)) {
+            abort(404);
+        }
+        return response()->download($path, 'plantilla_empleados.csv', [
+            'Content-Type' => 'text/csv',
+        ]);
+    });
 });
