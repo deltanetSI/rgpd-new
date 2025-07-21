@@ -37,7 +37,7 @@ export class LoginComponent {
 
         this.loading = false;
 
-        this.router.navigate(['']);
+        this.router.navigate(['/dashboard']);
 
 
 

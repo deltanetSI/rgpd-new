@@ -1,26 +1,67 @@
 <p-toolbar styleClass="app-navbar">
 
-  
   <div class="p-toolbar-group-start">
-    <p-button
-      icon='pi pi-bars'
-      (click)="onToggleSidebar()"
-      [text]="true"
-      pTooltip="Mostrar sidebar"
-      class="p-button-text"
-    ></p-button>
+    <p-button icon='pi pi-bars' (click)="onToggleSidebar()" [text]="true" pTooltip="Mostrar sidebar"
+      class="p-button-text"></p-button>
   </div>
 
-  <div class="p-toolbar-group-end">
- 
-
+  <div>
+    <!-- Botón-avatar redondo que abre el popover -->
     <p-button
-      size="small"
-      [icon]="isDark ? 'pi pi-sun' : 'pi pi-moon'"
-      (click)="onToggleDarkMode()"
-      [rounded]="true"
-      [text]="true"
-      pTooltip="Alternar modo oscuro"
-    ></p-button>
+      styleClass="!rounded-full !w-10 !h-10 !text-base bg-surface-200 dark:bg-surface-700 text-surface-900 dark:text-white"
+      [label]="userInitial" type="mibt" (click)="popover.toggle($event)" pTooltip="Opciones de usuario"
+      tooltipPosition="left" />
+
+    <!-- Popover con las opciones -->
+    <p-popover [appendTo]="'body'" #popover styleClass="!rounded-xl !top-14">
+
+      <div class="flex flex-col w-[15rem]">
+        <!-- Opción: Modo oscuro -->
+        <div class="flex justify-between items-center my-3 mx-3">
+          <div class="flex items-center gap-2">
+            <i style="color: var(--p-primary-color);" class="pi pi-moon dark:text-surface-200"></i>
+            <span style="color: var(--p-primary-color);" class="text-md dark:text-surface-200 font-bold">Modo
+              oscuro</span>
+          </div>
+          <p-toggleswitch [(ngModel)]="isDark" (onChange)="onToggleDarkMode()">
+            <ng-template pTemplate="checkedicon">
+              <i class="pi pi-moon !text-xs"></i>
+            </ng-template>
+            <ng-template pTemplate="uncheckedicon">
+              <i class="pi pi-adjust !text-xs"></i>
+            </ng-template>
+          </p-toggleswitch>
+        </div>
+
+        <p-divider styleClass="!my-2" />
+
+        <p-button variant="text" icon="pi pi-user" label="Ver perfil" styleClass="w-full !justify-start"> </p-button>
+
+        <p-button variant="text" icon="pi pi-cog" label="Ajustes de cuenta" styleClass="w-full !justify-start">
+        </p-button>
+
+        <p-divider styleClass="!my-2" />
+
+        <p-button variant="text" icon="pi pi-question-circle" label="Ayuda"
+          styleClass="w-full !justify-start"></p-button>
+
+        <p-divider styleClass="!my-2" />
+
+        <p-button variant="text" icon="pi pi-sign-out" (click)="logOut()" label="Cerrar sesión" styleClass="w-full !justify-start">
+        </p-button>
+
+
+
+
+      </div>
+    </p-popover>
+
+
+
+
+
+
+
+
   </div>
 </p-toolbar>
