@@ -1,5 +1,5 @@
 import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent, HttpErrorResponse } from '@angular/common/http';
-import { inject, PLATFORM_ID } from '@angular/core';
+import { inject, PLATFORM_ID, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -8,7 +8,7 @@ import { isPlatformBrowser } from '@angular/common';
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {
   const platformId = inject(PLATFORM_ID);
-  const authService = inject(AuthService);
+  const injector = inject(Injector); // Inyectamos el Injector, no el servicio directamente
   const router = inject(Router);
   const xsrfToken = getCookie('XSRF-TOKEN');
 
@@ -26,10 +26,10 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
 
   return next(apiReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      // ¡LA CLAVE ESTÁ AQUÍ!
-      // Solo intentamos redirigir si estamos en un navegador.
       if (isPlatformBrowser(platformId)) {
         if ((error.status === 401 || error.status === 419) && !req.url.includes('/logout')) {
+          // Obtenemos el AuthService del injector AQUI para romper el ciclo.
+          const authService = injector.get(AuthService);
           authService.handleAuthError();
           router.navigate(['/auth/login']);
         }
