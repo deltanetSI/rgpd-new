@@ -1,3 +1,9 @@
-<!-- Layout principal de la app -->
-<!-- Por ahora solo existe el layout de autenticación, pero aquí se puede añadir el layout principal de usuario autenticado en el futuro -->
-<router-outlet />
+@if ((authService.isAuthStatusChecked$ | async) === false) {
+  <div class="initial-loading">
+    <p-progress-spinner ariaLabel="loading" />
+  </div>
+}
+
+@if (authService.isAuthStatusChecked$ | async) {
+  <router-outlet></router-outlet>
+}

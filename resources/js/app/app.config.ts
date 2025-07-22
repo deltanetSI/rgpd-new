@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
       withFetch(),
       withXsrfConfiguration({
         cookieName: 'XSRF-TOKEN',
-        headerName: 'X-XSRF-TOKEN',
+        headerName: 'x-xsrf-token',
       }),
     ),
     provideBrowserGlobalErrorListeners(),

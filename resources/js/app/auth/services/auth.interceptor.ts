@@ -1,29 +1,44 @@
-import { HttpInterceptorFn } from '@angular/common/http';
-import { HttpRequest, HttpHandlerFn, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import { inject, PLATFORM_ID } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { AuthService } from '../services/auth.service'; // Asegúrate de que la ruta sea correcta
+import { isPlatformBrowser } from '@angular/common';
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {
-  let apiReq = req.clone({ withCredentials: true });
-
+  const platformId = inject(PLATFORM_ID);
+  const authService = inject(AuthService);
+  const router = inject(Router);
   const xsrfToken = getCookie('XSRF-TOKEN');
 
-  if (xsrfToken) {
-    apiReq = apiReq.clone({
-      headers: apiReq.headers
-        .set('X-XSRF-TOKEN', xsrfToken)
-        .set('Accept', 'application/json')
-        .set('X-Requested-With', 'XMLHttpRequest')
-    });
-  }
+  const apiReq = req.clone({
+    withCredentials: true,
+    headers: xsrfToken
+      ? req.headers
+          .set('X-XSRF-TOKEN', xsrfToken)
+          .set('Accept', 'application/json')
+          .set('X-Requested-With', 'XMLHttpRequest')
+      : req.headers
+          .set('Accept', 'application/json')
+          .set('X-Requested-With', 'XMLHttpRequest')
+  });
 
   return next(apiReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Aquí puedes gestionar redirecciones o logout en 401/403
+      // ¡LA CLAVE ESTÁ AQUÍ!
+      // Solo intentamos redirigir si estamos en un navegador.
+      if (isPlatformBrowser(platformId)) {
+        if ((error.status === 401 || error.status === 419) && !req.url.includes('/logout')) {
+          authService.handleAuthError();
+          router.navigate(['/auth/login']);
+        }
+      }
       return throwError(() => error);
     })
   );
 };
+
 
 function getCookie(name: string): string | null {
   if (typeof document === 'undefined') {

@@ -1,42 +1,30 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { map, take } from 'rxjs/operators';
 
 export const authGuard: CanActivateFn = () => {
-  const auth = inject(AuthService);
+  const authService = inject(AuthService);
   const router = inject(Router);
 
-  console.log('Guard ejecutado, userLoaded:', auth.userLoaded());
-
-  // Si el usuario ya está cargado, decide inmediatamente
-  if (auth.userLoaded()) {
-    if (auth.isAuthenticated()) {
-      return true;
-    } else {
-      router.navigate(['/auth/login']);
-      return false;
-    }
+  // 1. Comprobamos primero el estado local síncrono del signal.
+  // Esto es súper rápido y resuelve el problema de la redirección después del login.
+  if (authService.isAuthenticated()) {
+    return true;
   }
 
-  // Si no está cargado, espera a que lo esté (polling simple)
-  return new Promise<boolean>(resolve => {
-    let waited = 0;
-    const interval = setInterval(() => {
-      if (auth.userLoaded()) {
-        clearInterval(interval);
-        if (auth.isAuthenticated()) {
-          resolve(true);
-        } else {
-          router.navigate(['/auth/login']);
-          resolve(false);
-        }
+  // 2. Si no está autenticado localmente (ej: el usuario refrescó la página),
+  // entonces recurrimos al observable que valida la sesión con el backend.
+  return authService.userLoadedCheck$.pipe(
+    map(user => {
+      if (user) {
+        return true; // La sesión es válida en el servidor, permitir paso.
       }
-      waited += 50;
-      if (waited > 5000) { // 5 segundos máximo
-        clearInterval(interval);
-        router.navigate(['/auth/login']);
-        resolve(false);
-      }
-    }, 50);
-  });
-}; 
+      
+      // Si no hay usuario, la sesión no es válida, redirigir a login.
+      router.navigate(['/auth/login']);
+      return false;
+    }),
+    take(1) // Nos aseguramos de que el observable se complete después de la primera emisión.
+  );
+};
