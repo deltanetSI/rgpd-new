@@ -1,7 +1,6 @@
 import { environment } from '../../core/environments/environment';
-import { map } from 'rxjs/operators';
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -23,7 +22,7 @@ export class ExportDataProtectionService {
             reportProgress: true,
             observe: 'events', // <-- Esto es lo que hace que devuelva HttpEvent
             responseType: 'json'
-            
+
         });
 
     }

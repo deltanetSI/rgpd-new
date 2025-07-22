@@ -69,6 +69,9 @@ export const routes: Routes = [
       { path: 'documentation/legal', loadComponent: () => import('./documentation/components/legal/legal').then(m => m.Legal),
         data: { title: 'Documentacion Legal' }
       } ,
+      { path: 'usersettings', loadComponent: () => import('./auth/components/user-settings/user-settings').then(m => m.UserSettings),
+        data: { title: 'Configuracion de Usuario' }
+      } ,
       
       { path: '**', redirectTo: 'dashboard' }
     ]
