@@ -3,25 +3,27 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { map, filter, take } from 'rxjs/operators';
 
-export const authGuard: CanActivateFn = () => {
+export const guestGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
   // Esperamos a que la comprobación de estado de autenticación inicial haya terminado.
   return authService.isAuthStatusChecked$.pipe(
-    // 1. Filtramos hasta que el estado sea `true` (la comprobación ha finalizado).
+    // 1. Filtramos hasta que el estado sea `true`.
     filter(isChecked => isChecked),
-    // 2. Solo necesitamos el primer evento `true`.
+    // 2. Tomamos solo el primer valor `true`.
     take(1),
-    // 3. Una vez que la comprobación ha terminado, miramos el estado síncrono.
+    // 3. Una vez que la comprobación ha terminado, decidimos.
     map(() => {
+      // Si el usuario SÍ está autenticado...
       if (authService.isAuthenticated()) {
-        return true; // Si está autenticado, permitir el paso.
+        // ...lo redirigimos al dashboard y bloqueamos el acceso.
+        router.navigate(['/dashboard']);
+        return false;
+      } else {
+        // Si NO está autenticado, permitimos que vea la página de login/registro.
+        return true;
       }
-      
-      // Si no, redirigir a la página de login.
-      router.navigate(['/auth/login']);
-      return false;
     })
   );
 };

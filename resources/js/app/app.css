@@ -1,0 +1,21 @@
+.initial-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Contenedor del spinner para definir su tamaño */
+:host ::ng-deep .p-progress-spinner {
+  width: 10rem;  /* 160px - Un tamaño considerable */
+  height: 10rem;
+}
+
+/* El círculo SVG animado dentro del spinner */
+:host ::ng-deep .p-progress-spinner-circle {
+  /* Color primario (blue-500) de tu tema */
+  stroke: #3B82F6;
+  /* Grosor de la línea del spinner */
+  stroke-width: 3;
+}

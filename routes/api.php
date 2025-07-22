@@ -19,6 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         // Agrega los roles y permisos
         'roles' => $user->getRoleNames(), // Devuelve un array de nombres de roles
         'permissions' => $user->getAllPermissions()->pluck('name'), // Devuelve un array de nombres de permisos
+        'organization' => $user->organization,
     ]);
 });
 
