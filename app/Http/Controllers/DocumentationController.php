@@ -35,7 +35,13 @@ class DocumentationController extends Controller
     {
         $request->validate(['file' => 'required|file']);
         $file = $request->file('file');
-        $file->storeAs($this->legalPath, $file->getClientOriginalName());
+        $filename = $file->getClientOriginalName();
+
+        if (Storage::exists($this->legalPath . '/' . $filename)) {
+            return response()->json(['error' => 'Ya existe un documento con este nombre.'], 409);
+        }
+
+        $file->storeAs($this->legalPath, $filename);
         return response()->json(['message' => 'Documento subido correctamente.']);
     }
 
@@ -43,7 +49,13 @@ class DocumentationController extends Controller
     {
         $request->validate(['file' => 'required|file']);
         $file = $request->file('file');
-        $file->storeAs($this->aepdPath, $file->getClientOriginalName());
+        $filename = $file->getClientOriginalName();
+
+        if (Storage::exists($this->aepdPath . '/' . $filename)) {
+            return response()->json(['error' => 'Ya existe un documento con este nombre.'], 409);
+        }
+
+        $file->storeAs($this->aepdPath, $filename);
         return response()->json(['message' => 'Documento subido correctamente.']);
     }
 
