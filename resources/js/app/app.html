@@ -1,9 +1,7 @@
-@if ((authService.isAuthStatusChecked$ | async) === false) {
-  <div class="initial-loading">
-    <p-progress-spinner ariaLabel="loading" />
-  </div>
-}
-
-@if (authService.isAuthStatusChecked$ | async) {
+@if (showContent$ | async) {
   <router-outlet></router-outlet>
+} @else {
+  <div class="initial-loading">
+    <p-progress-spinner ariaLabel="loading" strokeWidth="4" />
+  </div>
 }
