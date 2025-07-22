@@ -44,6 +44,21 @@ export class SidebarComponent {
           routerLink: '/organization/companies'
         }]
     },
+    {
+      label: 'Documentacion',
+      icon: 'pi pi-folder',
+      items: [
+        {
+          label: 'AEPD',
+          icon: 'pi pi-book',
+          routerLink: '/documentation/aepd'
+        },
+        {
+          label: 'LEGAL',
+          icon: 'pi pi-book',
+          routerLink: '/documentation/legal'
+        }]
+    },
 
 
   ];
