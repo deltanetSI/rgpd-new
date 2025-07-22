@@ -3,14 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../core/environments/environment';
 import { CsrfService } from '../../core/services/csrf.service';
 import { UpdatePasswordDto } from '../interfaces/auth.dto';
+import { Observable, switchMap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UpdatePasswordUseCase {
   private http = inject(HttpClient);
   private csrf = inject(CsrfService);
 
-  async execute(dto: UpdatePasswordDto) {
-    await this.csrf.getCsrfCookie(environment.apiBaseUrl).toPromise();
-    return this.http.put(`${environment.authUrl}/user/password`, dto, { withCredentials: true });
+  execute(dto: UpdatePasswordDto): Observable<{ message: string }> {
+    return this.csrf.getCsrfCookie(environment.apiBaseUrl).pipe<{ message: string }>(
+      switchMap(() => {
+        return this.http.put<{ message: string }>(`${environment.apiUrl}/user/password`, dto, { withCredentials: true });
+      })
+    );
   }
 } 

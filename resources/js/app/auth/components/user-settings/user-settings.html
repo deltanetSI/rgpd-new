@@ -8,6 +8,8 @@
     <div class="card">
 
         <p-tabs value="0">
+
+
             <p-tablist>
                 <p-tab value="0"><i class="pi pi-user mr-3"></i>Perfil</p-tab>
                 <p-tab value="1"><i class="pi pi-lock mr-3"></i>Contraseña</p-tab>
@@ -16,88 +18,179 @@
 
                 <p-tabpanel value="0">
 
-                    <div class="flex flex-col gap-8 mt-5 ml-3">
-
-                        <div>
-                            <h3 class="text-lg font-semibold">Información del perfil</h3>
-                            <p>Actualiza tu nombre y dirección de correo electrónico</p>
-                        </div>
+                    <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()"
+                        class="flex flex-col gap-8 mt-5 ml-3">
 
 
-                        <div class="flex flex-col gap-4">
+                        <div class="flex flex-col gap-8 mt-5 ml-3">
 
-                            <p-floatlabel variant="on">
-                                <input id="nombre" pInputText class="w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl" />
-                                <label for="nombre">Nombre</label>
-                            </p-floatlabel>
+                            <div>
+                                <h3 class="text-lg font-semibold">Información del perfil</h3>
+                                <p>Actualiza tu nombre y dirección de correo electrónico</p>
+                            </div>
 
-                            <p-floatlabel variant="on">
-                                <input id="correo" pInputText class="w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl" />
-                                <label for="correo">Correo electrónico</label>
-                            </p-floatlabel>
+                            <div class="flex flex-col gap-8">
 
-                            <button pButton type="button" label="Guardar" class="w-fit mt-2"> </button>
-                        </div>
 
-                        <p-message severity="error w-fit mt-4 mb-4">
-                            <div class="flex flex-col gap-1">
-                                <p class="font-bold">Advertencia</p>
                                 <div class="flex flex-col">
-                                    <p>Por favor, procede con precaución, esto no se puede deshacer.</p>
+                                    <p-floatlabel variant="on">
+                                        <input id="nombre" pInputText
+                                            class="w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl"
+                                            formControlName="name" />
+                                        <label for="nombre">Nombre</label>
+                                    </p-floatlabel>
+                                    @if (profileForm.get('name')?.invalid && (profileForm.get('name')?.touched)) {
+                                    <p-message class="ml-1 mt-2" severity="error" size="small" variant="simple">Si
+                                        cambias el
+                                        nombre, debes proporcionar uno válido.</p-message>
+                                    }
+
                                 </div>
-                                <button pButton type="button" label="Eliminar cuenta"
-                                    class="p-button-danger w-fit mt-4">
+
+
+                                <div class="flex flex-col">
+
+                                    <p-floatlabel variant="on">
+                                        <input id="correo" pInputText
+                                            class="w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl"
+                                            formControlName="email" />
+                                        <label for="correo">Correo electrónico</label>
+                                    </p-floatlabel>
+                                    @if (profileForm.get('email')?.invalid && (profileForm.get('email')?.touched)) {
+                                    <p-message *ngIf="profileForm.get('email')?.errors?.['required']" class="ml-1 mt-2"
+                                        severity="error" size="small" variant="simple">Si cambias el correo electrónico,
+                                        debes proporcionar uno válido.</p-message>
+
+
+                                    <p-message *ngIf="profileForm.get('email')?.errors?.['email']" class="ml-1 mt-2"
+                                        severity="error" size="small" variant="simple">El correo introducido no tiene el
+                                        formato correcto.</p-message>
+                                    }
+
+                                </div>
+
+                                <button type="submit" pButton label="Guardar" class="w-fit mt-2"
+                                    [disabled]="profileForm.invalid || isProfileSaving">
+                                    <i class="pi pi-spin pi-spinner" *ngIf="isProfileSaving"></i>
                                 </button>
                             </div>
-                        </p-message>
+
+                            <p-message severity="error w-fit mt-4 mb-4 p-3">
+                                <div class="flex flex-col gap-1">
+                                    <p class="font-bold">Advertencia</p>
+                                    <div class="flex flex-col">
+                                        <p>Por favor, procede con precaución, esto no se puede deshacer.</p>
+                                    </div>
+                                    <button pButton type="button" label="Eliminar cuenta"
+                                        class="p-button-danger w-fit mt-2">
+                                    </button>
+                                </div>
+                            </p-message>
 
 
 
-                    </div>
+                        </div>
+
+                    </form>
                 </p-tabpanel>
 
 
                 <p-tabpanel value="1">
 
-                    <div class="flex flex-col gap-8 mt-5 ml-3">
+                    <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()"
+                        class="flex flex-col gap-8 mt-5 ml-3">
 
-                        <div>
-                            <h3 class="text-lg font-semibold">Actualizar contraseña</h3>
-                            <p>Asegúrate de que tu cuenta esté usando una contraseña larga y aleatoria para mayor seguridad</p>
+
+                        <div class="flex flex-col gap-8 mt-5 ml-3">
+
+                            <div>
+                                <h3 class="text-lg font-semibold">Actualizar contraseña</h3>
+                                <p>Asegúrate de que tu cuenta esté usando una contraseña larga y aleatoria para mayor
+                                    seguridad</p>
+                            </div>
+
+
+                            <div class="flex flex-col gap-6">
+
+                                <div class="flex flex-col">
+                                    <p-floatlabel variant="on" class="w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+                                        <p-password [toggleMask]="true" [feedback]="false" id="passwordActual"
+                                            formControlName="current_password" />
+                                        <label for="passwordActual">Contraseña actual</label>
+                                    </p-floatlabel>
+                                    @if (passwordForm.get('current_password')?.invalid &&
+                                    (passwordForm.get('current_password')?.touched)) {
+                                    <p-message *ngIf="passwordForm.get('current_password')?.errors?.['required']"
+                                        class="ml-1 mt-2" severity="error" size="small" variant="simple">La contraseña
+                                        actual es requerida.</p-message>
+                                    }
+                                </div>
+
+                                <div class="flex flex-col">
+
+                                    <p-floatlabel variant="on" class="w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+                                        <p-password [toggleMask]="true" id="passwordNew" formControlName="password"
+                                            formControlName="password" />
+                                        <label for="passwordNew">Contraseña nueva</label>
+                                    </p-floatlabel>
+                                    @if (passwordForm.get('password')?.invalid && passwordForm.get('password')?.touched)
+                                    {
+                                    <p-message *ngIf="passwordForm.get('password')?.errors?.['required']"
+                                        class="ml-1 mt-2" severity="error" size="small" variant="simple">La contraseña
+                                        nueva es
+                                        requerida.</p-message>
+                                    <p-message *ngIf="passwordForm.get('password')?.errors?.['minlength']"
+                                        class="ml-1 mt-2" severity="error" size="small" variant="simple">La contraseña
+                                        nueva debe tener al
+                                        menos 8 caracteres.</p-message>
+                                    }
+                                </div>
+
+
+                                <div class="flex flex-col">
+
+                                    <p-floatlabel variant="on" class="w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+                                        <p-password [toggleMask]="true" id="rpasswordNew"
+                                            formControlName="password_confirmation" />
+                                        <label for="rpasswordNew">Repita contraseña nueva</label>
+                                    </p-floatlabel>
+                                    @if (passwordForm.get('password_confirmation')?.invalid &&
+                                    passwordForm.get('password_confirmation')?.touched) {
+                                    <p-message *ngIf="passwordForm.get('password_confirmation')?.errors?.['required']"
+                                        class="ml-1 mt-2" severity="error" size="small" variant="simple">La confirmación
+                                        de
+                                        contraseña es
+                                        requerida.</p-message>
+                                    <p-message
+                                        *ngIf="passwordForm.errors?.['mismatch'] && passwordForm.get('password_confirmation')?.touched"
+                                        class="ml-1 mt-2" severity="error" size="small" variant="simple">Las contraseñas
+                                        no
+                                        coinciden </p-message>
+                                    }
+                                </div>
+
+                                <button pButton type="submit" label="Guardar" class="w-fit mt-5 mb-2"
+                                    [disabled]="passwordForm.invalid || isPasswordSaving">
+                                    <i class="pi pi-spin pi-spinner" *ngIf="isPasswordSaving"> </i>
+                                </button>
+                            </div>
+
+
+
+
+
                         </div>
 
 
-                        <div class="flex flex-col gap-4">
-
-                            <p-floatlabel variant="on">
-                                <input id="passwordActual" pInputText class="w-150" />
-                                <label for="passwordActual">Contraseña actual</label>
-                            </p-floatlabel>
-
-                            <p-floatlabel variant="on">
-                                <input id="passwordNew" pInputText class="w-150" />
-                                <label for="passwordNew">Contraseña nueva</label>
-                            </p-floatlabel>
-
-                               <p-floatlabel variant="on">
-                                <input id="rpasswordNew" pInputText class="w-150" />
-                                <label for="rpasswordNew">Repita contraseña nueva</label>
-                            </p-floatlabel>
-
-                            <button pButton type="button" label="Guardar" class="w-fit mt-5 mb-2"> </button>
-                        </div>
-
-
-
-
-
-                    </div>
-
+                    </form>
 
                 </p-tabpanel>
 
 
             </p-tabpanels>
+
+
+
         </p-tabs>
 
 
@@ -106,3 +199,5 @@
 
 
 </div>
+
+<p-toast position="bottom-right"></p-toast>

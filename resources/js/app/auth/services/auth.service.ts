@@ -104,9 +104,12 @@ export class AuthService {
   }
 
   updateProfile(dto: UpdateProfileDto): Observable<User> {
+
     return from(this.updateProfileUseCase.execute(dto)).pipe(
       switchMap(() => this.fetchAndSetUser())
     );
+
+
   }
 
   fetchAndSetUser(): Observable<User> {
@@ -147,17 +150,18 @@ export class AuthService {
     );
   }
 
-  updatePassword(dto: UpdatePasswordDto) {
-    return from(this.updatePasswordUseCase.execute(dto)).pipe(
-      switchMap(response => response)
+  updatePassword(dto: UpdatePasswordDto): Observable<{ message: string }> { // Tipo de retorno
+    return this.updatePasswordUseCase.execute(dto).pipe(
+      tap(response => console.log('Respuesta de actualización de contraseña:', response))
     );
   }
+  
 }
 
-  /* hasRole(role: string): boolean {
-    return !!this.user()?.roles?.includes(role);
-  }
+/* hasRole(role: string): boolean {
+  return !!this.user()?.roles?.includes(role);
+}
 
-  hasPermission(permission: string): boolean {
-    return !!this.user()?.permissions?.includes(permission);
-  } */
+hasPermission(permission: string): boolean {
+  return !!this.user()?.permissions?.includes(permission);
+} */
