@@ -9,7 +9,7 @@ import { PopoverModule } from 'primeng/popover';
 import { ToggleSwitch } from 'primeng/toggleswitch';
 import { DividerModule } from 'primeng/divider';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-menubar',
@@ -23,7 +23,8 @@ import { Router } from '@angular/router';
     PopoverModule,
     ToggleSwitch,
     DividerModule,
-    FormsModule
+    FormsModule,
+    RouterLink,
   ],
   templateUrl: './menubar.component.html',
   styleUrls: ['./menubar.component.css']

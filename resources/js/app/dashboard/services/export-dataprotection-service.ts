@@ -1,7 +1,6 @@
 import { environment } from '../../core/environments/environment';
-import { map } from 'rxjs/operators';
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -11,44 +10,50 @@ export class ExportDataProtectionService {
     private httpClient = inject(HttpClient);
 
 
-    uploadExcelFile(file: File): Observable<any> {
+    // Subir CSV
+    importCsv(file: File, organizationId: number): Observable<any> {
+        
+         const formData: FormData = new FormData();
+        formData.append('file', file, file.name);
+        formData.append('organization_id', organizationId.toString());
 
-        const formData: FormData = new FormData();
+        return this.httpClient.post(`${environment.apiUrl}/employees/import`, formData, {
 
-        formData.append('excel_file', file, file.name);
-
-        // Configuración para reportar el progreso de la subida
-        return this.httpClient.post(`${environment.apiUrl}/upload-excel`, formData, {
             reportProgress: true,
-            observe: 'events',
+            observe: 'events', // <-- Esto es lo que hace que devuelva HttpEvent
             responseType: 'json'
-        }).pipe(
-            map((event: HttpEvent<any>) => {
 
-                if (event.type === HttpEventType.UploadProgress) {
-                    const percentDone = Math.round(100 * event.loaded / (event.total || 1));
-                    console.log(`Progreso de subida: ${percentDone}%`);
-                } else if (event.type === HttpEventType.Response) {
-                    console.log('Archivo subido con éxito:', event.body);
-                    return event.body;
-                }
-                return event;
-            })
-        );
+        });
+
     }
 
 
-    downloadZip(downloadUrl: string): Observable<Blob> {
+    // Descargar ZIP con todos los pdf
+    downloadZip(organizationId: number, batchToken: string, filename: string): Observable<Blob> {
+        // Laravel espera los parámetros en la query string
+        const downloadUrl = `${environment.apiUrl}/employees/download-zip?organization_id=${organizationId}&batch=${batchToken}&file=${filename}`;
         return this.httpClient.get(downloadUrl, {
             responseType: 'blob'
         });
     }
 
 
-    sendEmails(data: { fileId?: string }): Observable<any> {
+    // Enviar EMAILS
 
-        return this.httpClient.post(`${environment.apiUrl}/process-and-email`, data);
+    sendContractsToEmployeesByEmail(organizationId: number, batchToken: string): Observable<any> {
+        const payload = {
+            organization_id: organizationId,
+            batch: batchToken
+        };
+        return this.httpClient.post(`${environment.apiUrl}/employees/send-contracts`, payload);
+    }
 
+
+    // Descargar plantilla
+    downloadTemplate(): Observable<Blob> {
+        return this.httpClient.get(`${environment.apiUrl}/employees/template`, {
+            responseType: 'blob'
+        });
     }
 
 }

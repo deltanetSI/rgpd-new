@@ -1,5 +1,5 @@
 .app-navbar {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Ajustado para más visibilidad en ambos modos */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ajustado para más visibilidad en ambos modos */
   border-radius: 0;
   border: none;
 }

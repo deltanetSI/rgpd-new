@@ -23,6 +23,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     ]);
 });
 
+Route::middleware('auth:sanctum')->put('/user/profile', [UserController::class, 'updateProfile']); 
+Route::middleware('auth:sanctum')->put('/user/password', [UserController::class, 'updatePassword']); 
+
 // Ejemplo de rutas protegidas por roles y permisos
 Route::middleware(['auth:sanctum', 'role:admin'])->get('/admin', function () {
     return response()->json(['message' => 'Solo para admins']);
