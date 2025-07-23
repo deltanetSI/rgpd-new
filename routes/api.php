@@ -6,7 +6,7 @@ use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\EmployeeImportController;
-
+use App\Http\Controllers\DataRightsRequestController;
 
 // Endpoints de usuario autenticado
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -72,4 +72,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/employees/download-zip', [EmployeeImportController::class, 'downloadZip'])->name('employees.downloadZip');
     Route::post('/employees/send-contracts', [EmployeeImportController::class, 'sendContractsToEmployees']);
 
+
+    // Solicitudes de derechos
+    Route::post('/exercise-of-rights', [DataRightsRequestController::class, 'store']);
+
+
+    //ejercicio de derechos
+    Route::post('/data-rights-requests/{originalRequest}/responses', [DataRightsRequestController::class, 'generateResponse'])->name('data-rights-requests.responses.store');
+    // Ruta para la descarga del PDF
+    Route::get('/data-rights-requests/{dataRightsRequest}/download', [DataRightsRequestController::class, 'download'])->name('data-rights-requests.download');
+    // Puedes mover aquí el resto de rutas si también requieren autenticación
+    Route::apiResource('data-rights-requests', DataRightsRequestController::class);
 });
