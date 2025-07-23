@@ -61,20 +61,15 @@ class DataRightsRequestController extends Controller
         
         $dataRequest = DataRightsRequest::create($validatedData);
 
-        // Llamamos al nuevo método para generar y guardar el PDF
         $filepath = $this->generateAndSavePdf($dataRequest);
-
-        // Actualizamos el registro con la ruta y guardamos
         $dataRequest->filepath = $filepath;
         $dataRequest->save();
 
-        // Generamos una URL de descarga temporal y la devolvemos en la respuesta
-        $downloadUrl = Storage::disk('private')->temporaryUrl($filepath, now()->addMinutes(60));
-
+        // CORRECCIÓN: Se elimina temporaryUrl. El frontend construirá la URL de descarga
+        // usando la ruta del método `download` y el ID del recurso.
         return response()->json([
             'message' => 'Initial request generated and registered successfully.',
             'data' => $dataRequest->load('organization:id,name'),
-            'download_url' => $downloadUrl, // <-- URL DE DESCARGA
         ], 201);
     }
     
@@ -121,20 +116,14 @@ class DataRightsRequestController extends Controller
 
         $responseRequest = DataRightsRequest::create($dataToCreate);
 
-        // Llamamos al nuevo método para generar y guardar el PDF
         $filepath = $this->generateAndSavePdf($responseRequest);
-
-        // Actualizamos el registro
         $responseRequest->filepath = $filepath;
         $responseRequest->save();
         
-        // Generamos una URL de descarga temporal
-        $downloadUrl = Storage::disk('private')->temporaryUrl($filepath, now()->addMinutes(60));
-
+        // CORRECCIÓN: Se elimina temporaryUrl.
         return response()->json([
             'message' => 'Response document generated successfully.',
             'data' => $responseRequest->load('organization:id,name'),
-            'download_url' => $downloadUrl, // <-- URL DE DESCARGA
         ], 201);
     }
     
@@ -164,14 +153,16 @@ class DataRightsRequestController extends Controller
     }
 
 
-    /**
-     * MÉTODO NUEVO: Gestiona la descarga segura de un documento.
+     /**
+     * Gestiona la descarga segura de un documento.
      */
-    public function download(DataRightsRequest $dataRightsRequest): StreamedResponse
+    public function download(Request $request, DataRightsRequest $dataRightsRequest): StreamedResponse
     {
+        // CORRECCIÓN: Usamos $request->user() para una mejor inferencia de tipos por parte del linter.
+        $user = $request->user();
+
         // 1. Autorización: Verificamos que el usuario autenticado pertenece a la organización del documento.
-        // (Asegúrate de que tus rutas para este método están protegidas con autenticación).
-        if (auth()->user()->organization_id !== $dataRightsRequest->organization_id) {
+        if ($user->organization_id !== $dataRightsRequest->organization_id) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -181,27 +172,25 @@ class DataRightsRequestController extends Controller
         }
 
         // 3. Descarga: Servimos el archivo para que el navegador lo descargue.
+        
         return Storage::disk('private')->download($dataRightsRequest->filepath);
     }
 
     /**
-     * MÉTODO NUEVO: Centraliza la creación y guardado del PDF.
+     * Centraliza la creación y guardado del PDF.
      */
     private function generateAndSavePdf(DataRightsRequest $dataRequest): string
     {
         $dataRequest->load('organization');
         $viewData = $this->prepareViewData($dataRequest);
 
-        // Generamos el PDF
         $pdf = Pdf::loadView($dataRequest->template_type->getViewPath(), $viewData);
 
-        // Creamos el nombre de archivo y la ruta según tus especificaciones
         $organizationName = Str::slug($dataRequest->organization->name);
         $documentName = Str::slug($dataRequest->template_type->value . ' ' . $dataRequest->full_name) . '.pdf';
         
         $filepath = "ejercicio_derechos/{$organizationName}/{$documentName}";
 
-        // Guardamos en el disco 'private'
         Storage::disk('private')->put($filepath, $pdf->output());
 
         return $filepath;
