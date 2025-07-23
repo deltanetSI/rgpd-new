@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>Cláusula de Protección de Datos para Empleados</title>
     <style>
-        body { font-family: Arial, sans-serif; font-size: 14px; }
+        body { font-family: Arial, sans-serif; font-size: 14px; padding: 15px 20px; }
         .firma { margin-top: 60px; }
     </style>
 </head>
 <body>
-    <h2 style="text-align:center;">CLÁUSULA PARA EMPLEADOS EN MATERIA DE PROTECCIÓN DE DATOS PERSONALES</h2>
+    <h2 style="text-align:center; margin-bottom:20px;">CLÁUSULA PARA EMPLEADOS EN MATERIA DE PROTECCIÓN DE DATOS PERSONALES</h2>
     <p>
         Yo, Don/Doña <strong>{{ $employee_name }}</strong><br>
         Con DNI nº <strong>{{ $employee_dni }}</strong>
