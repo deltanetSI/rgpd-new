@@ -10,9 +10,12 @@ use Illuminate\Validation\Rule;
 use Spatie\LaravelPdf\Facades\Pdf;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Date;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DataRightsRequestController extends Controller
 {
+   
+    
     /**
      * Lista los registros. Por defecto, solo las solicitudes iniciales (sin padre).
      * Para ver todo, se puede pasar ?include_responses=1
@@ -58,43 +61,41 @@ class DataRightsRequestController extends Controller
         
         $dataRequest = DataRightsRequest::create($validatedData);
 
-        $viewData = $this->prepareViewData($dataRequest);
-        // Usamos el nuevo método del Enum para obtener la ruta correcta de la vista
-        $pdf = Pdf::loadView($dataRequest->template_type->getViewPath(), $viewData);
-        
-        $filename = Str::slug($dataRequest->template_type->value) . '-' . $dataRequest->id . '-' . time() . '.pdf';
-        $filepath = "data-rights-requests/{$dataRequest->organization_id}/{$filename}";
-        
-        Storage::disk('public')->put($filepath, $pdf->output());
-
+        $filepath = $this->generateAndSavePdf($dataRequest);
         $dataRequest->filepath = $filepath;
         $dataRequest->save();
 
+        // CORRECCIÓN: Se elimina temporaryUrl. El frontend construirá la URL de descarga
+        // usando la ruta del método `download` y el ID del recurso.
         return response()->json([
             'message' => 'Initial request generated and registered successfully.',
             'data' => $dataRequest->load('organization:id,name'),
         ], 201);
     }
-
+    
     /**
      * Genera una RESPUESTA o un REQUERIMIENTO a partir de una solicitud existente.
      */
     public function generateResponse(Request $request, DataRightsRequest $originalRequest)
     {
-        $validatedData = $request->validate([
+        // <-- CAMBIO CLAVE: Lógica de mapeo y validación centralizada aquí
+        $templateEnum = DataRightsTemplateType::from($request->input('template_type'));
+        $targetField = $templateEnum->getRequiredContentField();
+
+        $validationRules = [
             'template_type' => ['required', 'string', Rule::in(DataRightsTemplateType::values()), Rule::notIn(DataRightsTemplateType::initialRequestTypes())],
             'date' => 'nullable|date',
-            'information_provided' => 'nullable|string',
-            'denial_reasons' => 'nullable|string',
-            'rectified_data' => 'nullable|string',
-            'deleted_data' => 'nullable|string',
-            'limitation_applied' => 'nullable|string',
-            'right_exercised' => 'nullable|string',
-            'request_date' => 'nullable|date',
-            'required_documentation' => 'nullable|string',
-        ]);
+        ];
 
-        $responseRequest = DataRightsRequest::create([
+        // Añadimos la validación para el campo de contenido genérico solo si es necesario para esta plantilla
+        if ($targetField) {
+            $validationRules['response_content'] = 'required|string';
+        }
+
+        $validatedData = $request->validate($validationRules);
+
+        // Preparamos los datos para el nuevo registro
+        $dataToCreate = [
             'parent_id' => $originalRequest->id,
             'organization_id' => $originalRequest->organization_id,
             'template_type' => $validatedData['template_type'],
@@ -103,33 +104,29 @@ class DataRightsRequestController extends Controller
             'nif' => $originalRequest->nif,
             'city' => $originalRequest->city,
             'date' => $validatedData['date'] ?? Date::now(),
-            'information_provided' => $validatedData['information_provided'] ?? null,
-            'denial_reasons' => $validatedData['denial_reasons'] ?? null,
-            'rectified_data' => $validatedData['rectified_data'] ?? null,
-            'deleted_data' => $validatedData['deleted_data'] ?? null,
-            'limitation_applied' => $validatedData['limitation_applied'] ?? null,
-            'right_exercised' => $validatedData['right_exercised'] ?? null,
-            'request_date' => $validatedData['request_date'] ?? null,
-            'required_documentation' => $validatedData['required_documentation'] ?? null,
-        ]);
+            // Para la subsanación, rellenamos los campos que necesita la plantilla
+            'right_exercised' => $originalRequest->template_type->value,
+            'request_date' => $originalRequest->created_at->toDateString(),
+        ];
 
-        $viewData = $this->prepareViewData($responseRequest);
-        $pdf = Pdf::loadView($responseRequest->template_type->getViewPath(), $viewData);
+        // Mapeamos el contenido genérico al campo específico de la BBDD
+        if ($targetField) {
+            $dataToCreate[$targetField] = $validatedData['response_content'];
+        }
 
-        $filename = Str::slug($responseRequest->template_type->value) . '-' . $responseRequest->id . '-' . time() . '.pdf';
-        $filepath = "data-rights-requests/{$responseRequest->organization_id}/{$filename}";
-        
-        Storage::disk('public')->put($filepath, $pdf->output());
+        $responseRequest = DataRightsRequest::create($dataToCreate);
 
+        $filepath = $this->generateAndSavePdf($responseRequest);
         $responseRequest->filepath = $filepath;
         $responseRequest->save();
-
+        
+        // CORRECCIÓN: Se elimina temporaryUrl.
         return response()->json([
             'message' => 'Response document generated successfully.',
             'data' => $responseRequest->load('organization:id,name'),
         ], 201);
     }
-
+    
     /**
      * Muestra un registro específico con sus respuestas (hijos) y su solicitud original (padre).
      */
@@ -154,4 +151,50 @@ class DataRightsRequestController extends Controller
         $viewData['company_name'] = $dataRequest->organization->name;
         return $viewData;
     }
+
+
+     /**
+     * Gestiona la descarga segura de un documento.
+     */
+    public function download(Request $request, DataRightsRequest $dataRightsRequest): StreamedResponse
+    {
+        // CORRECCIÓN: Usamos $request->user() para una mejor inferencia de tipos por parte del linter.
+        $user = $request->user();
+
+        // 1. Autorización: Verificamos que el usuario autenticado pertenece a la organización del documento.
+        if ($user->organization_id !== $dataRightsRequest->organization_id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // 2. Verificación: Comprobamos que el archivo existe en el disco privado.
+        if (!$dataRightsRequest->filepath || !Storage::disk('private')->exists($dataRightsRequest->filepath)) {
+            abort(404, 'File not found.');
+        }
+
+        // 3. Descarga: Servimos el archivo para que el navegador lo descargue.
+        
+        return Storage::disk('private')->download($dataRightsRequest->filepath);
+    }
+
+    /**
+     * Centraliza la creación y guardado del PDF.
+     */
+    private function generateAndSavePdf(DataRightsRequest $dataRequest): string
+    {
+        $dataRequest->load('organization');
+        $viewData = $this->prepareViewData($dataRequest);
+
+        $pdf = Pdf::loadView($dataRequest->template_type->getViewPath(), $viewData);
+
+        $organizationName = Str::slug($dataRequest->organization->name);
+        $documentName = Str::slug($dataRequest->template_type->value . ' ' . $dataRequest->full_name) . '.pdf';
+        
+        $filepath = "ejercicio_derechos/{$organizationName}/{$documentName}";
+
+        Storage::disk('private')->put($filepath, $pdf->output());
+
+        return $filepath;
+    }
+    
+  
 }
