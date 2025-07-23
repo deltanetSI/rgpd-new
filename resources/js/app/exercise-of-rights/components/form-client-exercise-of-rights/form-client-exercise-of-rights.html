@@ -1,0 +1,153 @@
+<p-dialog header="Crear Nuevo Cliente" [(visible)]="visible" [modal]="true" [closable]="false" (onHide)="onHideDialog()"
+  [style]="{ width: '45rem' }" maskStyleClass="backdrop-blur-md" styleClass="p-dialog-custom-style">
+  <ng-template pTemplate="header">
+    <h3 class="text-lg font-semibold">Crear nueva solicitud</h3>
+  </ng-template>
+
+  <form [formGroup]="clientForm" (ngSubmit)="saveRequest()" class="flex flex-wrap gap-6">
+
+    <div class="flex flex-col gap-10 flex-1 min-w-[calc(50%-12px)] mt-6">
+
+      <div class="flex flex-col gap-1 w-full">
+        <p-floatlabel class="w-full">
+          <input id="name" pInputText formControlName="name" class="w-full" [invalid]="isInvalid('name')" />
+          <label for="name">Nombre</label>
+        </p-floatlabel>
+        @if (isInvalid('name')) {
+        @if (clientForm.get('name')?.hasError('required')) {
+        <p-message severity="error" size="small" variant="simple">El nombre es obligatorio.</p-message>
+        }
+        }
+      </div>
+
+
+
+      <!-- Campo: DNI -->
+      <div class="field col-12 md:col-6 flex flex-col gap-1 w-full">
+        <p-floatlabel class="w-full">
+          <input id="dni" pInputText formControlName="dni" class="w-full" [invalid]="isInvalid('dni')" />
+          <label for="dni">DNI</label>
+        </p-floatlabel>
+
+        @if (isInvalid('dni')) {
+        @if (clientForm.get('dni')?.hasError('required')) {
+        <p-message severity="error" size="small" variant="simple">El DNI es obligatorio.</p-message>
+        }
+        @if (clientForm.get('dni')?.hasError('pattern')) {
+        <p-message severity="error" size="small" variant="simple">Formato inválido (ej. 12345678A).</p-message>
+        }
+        }
+      </div>
+
+
+
+      <!-- Campo: Localidad -->
+      <div class="flex flex-col gap-1 w-full">
+        <p-floatlabel class="w-full">
+          <input id="city" pInputText formControlName="city" class="w-full" [invalid]="isInvalid('city')" />
+          <label for="city">Localidad</label>
+        </p-floatlabel>
+        @if (isInvalid('city')) {
+        @if (clientForm.get('city')?.hasError('required')) {
+        <p-message severity="error" size="small" variant="simple">La localidad es obligatoria.</p-message>
+        }
+        }
+      </div>
+
+
+
+    </div>
+
+
+    <!-- Segunda columna de campos -->
+    <div class="flex flex-col gap-10 flex-1 h-full min-w-[calc(50%-12px)] mt-6">
+
+      <div class="flex flex-col gap-1 w-full">
+        <p-floatlabel class="w-full">
+          <input id="last_name" pInputText formControlName="last_name" class="w-full"
+            [invalid]="isInvalid('last_name')" />
+          <label for="last_name">Apellidos</label>
+        </p-floatlabel>
+        @if (isInvalid('last_name')) {
+        @if (clientForm.get('last_name')?.hasError('required')) {
+        <p-message severity="error" size="small" variant="simple">Los apellidos son obligatorios.</p-message>
+
+        }
+        }
+      </div>
+
+
+
+      <!-- Campo: Provincia -->
+      <div class="flex flex-col gap-1 w-full">
+        <p-floatlabel class="w-full">
+          <input id="province" pInputText formControlName="province" class="w-full" [invalid]="isInvalid('province')" />
+          <label for="province">Provincia</label>
+        </p-floatlabel>
+        @if (isInvalid('province')) {
+        @if (clientForm.get('province')?.hasError('required')) {
+        <p-message severity="error" size="small" variant="simple">La provincia es obligatoria.</p-message>
+        }
+        }
+      </div>
+
+      <!-- Campo: Código postal -->
+      <div class="flex flex-col gap-1 w-full">
+        <p-floatlabel class="w-full">
+          <p-inputMask inputId="postal_code" mask="99999" styleClass="!w-full" formControlName="postal_code"
+            [invalid]="isInvalid('postal_code')"></p-inputMask>
+          <label for="postal_code">Código postal</label>
+        </p-floatlabel>
+        @if (isInvalid('postal_code')) {
+        @if (clientForm.get('postal_code')?.hasError('required')) {
+        <p-message severity="error" size="small" variant="simple">El código postal es obligatorio.</p-message>
+        }
+        @if (clientForm.get('postal_code')?.hasError('pattern')) {
+        <p-message severity="error" size="small" variant="simple">Formato inválido (ej. 28001).</p-message>
+        }
+        }
+      </div>
+
+    </div>
+
+    <!-- Campo: Dirección -->
+    <div class="flex flex-col gap-1 w-full">
+      <p-floatlabel class="w-full">
+        <input id="address" pInputText formControlName="address" class="w-full" [invalid]="isInvalid('address')" />
+        <label for="address">Dirección</label>
+      </p-floatlabel>
+      @if (isInvalid('address')) {
+      @if (clientForm.get('address')?.hasError('required')) {
+      <p-message severity="error" size="small" variant="simple">La dirección es obligatoria.</p-message>
+      }
+      }
+    </div>
+
+    <p-divider align="left" type="solid" styleClass="!my-0 !px-0">
+      <b>Tipo de ejercicio</b>
+    </p-divider>
+
+    <div class="flex flex-col gap-1 w-full">
+      <p-select [appendTo]="'body'" [options]="exercises" formControlName="exercise" class="!w-full md:w-56" />
+      @if (isInvalid('exerciseType')) {
+      @if (clientForm.get('exerciseType')?.hasError('required')) {
+      <p-message severity="error" size="small" variant="simple">La dirección es obligatoria.</p-message>
+      }
+      }
+    </div>
+
+
+
+
+  </form>
+
+
+
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-2 mt-4">
+      <p-button label="Cancelar" icon="pi pi-times" severity="secondary" (click)="onHideDialog()"></p-button>
+      <p-button label="Descargar solicitud" icon="pi pi-check" severity="primary" (click)="saveRequest()"
+        [disabled]="clientForm.invalid"></p-button>
+    </div>
+  </ng-template>
+</p-dialog>

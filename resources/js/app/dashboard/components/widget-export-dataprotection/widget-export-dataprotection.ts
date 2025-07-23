@@ -1,24 +1,32 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { FileUploadModule } from 'primeng/fileupload';
+import { FileUploadHandlerEvent, FileUploadModule } from 'primeng/fileupload';
 import { DividerModule } from 'primeng/divider';
 import { ExportDataProtectionService } from '../../services/export-dataprotection-service';
 import { saveAs } from 'file-saver';
 import { TooltipModule } from 'primeng/tooltip';
 import { HttpEventType } from '@angular/common/http';
+import { MessageModule } from 'primeng/message';
+import { MessageService } from 'primeng/api';
+import { FileUpload } from 'primeng/fileupload';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-export-dataprotection',
-  imports: [CardModule, ButtonModule, FileUploadModule, DividerModule, TooltipModule],
-  templateUrl: './export-dataprotection.html',
-  styleUrl: './export-dataprotection.css'
+  imports: [CardModule, ButtonModule, FileUploadModule, DividerModule, TooltipModule, MessageModule, ToastModule],
+  templateUrl: './widget-export-dataprotection.html',
+  styleUrl: './widget-export-dataprotection.css',
+  providers: [MessageService],
+
 })
-export class ExportDataprotection implements OnInit {
+export class WidgetExportDataprotection implements OnInit {
 
-  @ViewChild('fileUploadRef') fileUploadRef!: any;
+  @ViewChild('fileUploadRef') fileUploadRef!: FileUpload; 
 
+  private messageService = inject(MessageService);
   private exportService = inject(ExportDataProtectionService);
+
   fileId: string | undefined;
   isProcessing = false;
   downloadZipUrl: string | null = null;
@@ -35,9 +43,9 @@ export class ExportDataprotection implements OnInit {
 
   }
 
-  onUploadCsv(event: any): void {
+  onUploadCsv(event: FileUploadHandlerEvent): void {
     if (!this.currentOrganizationId) {
-      //this.messageService.add({severity: 'error', summary: 'Error', detail: 'ID de organización no disponible para la importación.'});
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'ID de organización no disponible para la importación.'});
       return;
     }
 
@@ -54,7 +62,7 @@ export class ExportDataprotection implements OnInit {
         if (responseEvent.type === HttpEventType.Response) {
 
           const response = responseEvent.body;
-          //this.messageService.add({severity: 'success', summary: 'Importación', detail: response.message});
+          this.messageService.add({severity: 'success', summary: 'Importación', detail: response.message});
           console.log('Respuesta de importación:', response);
 
           // Habilita los botones si la importación fue exitosa
@@ -70,9 +78,9 @@ export class ExportDataprotection implements OnInit {
       },
       error: (err) => {
         console.error('Error al importar empleados:', err);
-        //this.messageService.add({severity: 'error', summary: 'Error', detail: err.error?.message || 'Error al importar empleados.'});
-        this.isProcessing = false; // Habilita los botones en caso de error
-        this.downloadZipUrl = null; // Asegura que los botones permanezcan deshabilitados en caso de error
+        this.messageService.add({severity: 'error', summary: 'Error', detail: err.error?.message || 'Error al importar empleados.'});
+        this.isProcessing = false;
+        this.downloadZipUrl = null; 
         this.sendMailBatchToken = null;
       }
     });
@@ -84,8 +92,7 @@ export class ExportDataprotection implements OnInit {
     if (!this.downloadZipUrl || !this.currentOrganizationId || !this.sendMailBatchToken) {
       
     console.log(this.downloadZipUrl + " " + this.currentOrganizationId + " " + this.sendMailBatchToken)
-    
-      //this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: 'No hay contratos generados para descargar o faltan datos.'});
+      this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: 'No hay contratos generados para descargar o faltan datos.'});
       return;
     }
 
@@ -99,11 +106,11 @@ export class ExportDataprotection implements OnInit {
     ).subscribe({
       next: (blob) => {
         saveAs(blob, filename);
-        //this.messageService.add({severity: 'success', summary: 'Descarga', detail: 'Contratos descargados correctamente.'});
+        this.messageService.add({severity: 'success', summary: 'Descarga', detail: 'Contratos descargados correctamente.'});
       },
       error: (err) => {
         console.error('Error al descargar contratos:', err);
-        //this.messageService.add({severity: 'error', summary: 'Error', detail: err.error?.message || 'Error al descargar contratos.'});
+        this.messageService.add({severity: 'error', summary: 'Error', detail: err.error?.message || 'Error al descargar contratos.'});
       }
     });
   }
@@ -113,23 +120,24 @@ export class ExportDataprotection implements OnInit {
 
   onSendContractsByEmail(): void {
     if (!this.sendMailBatchToken || !this.currentOrganizationId) {
-      //this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: 'No hay contratos disponibles para enviar o ID de organización.'});
+      this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: 'No hay contratos disponibles para enviar o ID de organización.'});
       return;
     }
 
     this.isProcessing = true;
     this.exportService.sendContractsToEmployeesByEmail(this.currentOrganizationId, this.sendMailBatchToken).subscribe({
       next: (response) => {
-        //this.messageService.add({severity: 'success', summary: 'Envío', detail: response.message});
+        this.messageService.add({severity: 'success', summary: 'Envío', detail: response.message});
         console.log('Respuesta de envío de emails:', response);
         this.isProcessing = false;
-        // Opcional: limpiar el estado después de enviar los emails si no se pueden volver a descargar/enviar
+        
+        // limpiar el estado después de enviar los emails si no se pueden volver a descargar/enviar
         this.downloadZipUrl = null;
         this.sendMailBatchToken = null;
       },
       error: (err) => {
         console.error('Error al enviar contratos por email:', err);
-        //this.messageService.add({severity: 'error', summary: 'Error', detail: err.error?.message || 'Error al enviar contratos por email.'});
+        this.messageService.add({severity: 'error', summary: 'Error', detail: err.error?.message || 'Error al enviar contratos por email.'});
         this.isProcessing = false;
       }
     });
@@ -141,11 +149,11 @@ export class ExportDataprotection implements OnInit {
     this.exportService.downloadTemplate().subscribe({
       next: (blob) => {
         saveAs(blob, 'plantilla_empleados.csv');
-        //this.messageService.add({severity: 'success', summary: 'Descarga', detail: 'Plantilla descargada correctamente.'});
+        this.messageService.add({severity: 'success', summary: 'Descarga', detail: 'Plantilla descargada correctamente.'});
       },
       error: (err) => {
         console.error('Error al descargar la plantilla:', err);
-        //this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo descargar la plantilla.'});
+        this.messageService.add({severity: 'error', summary: 'Error', detail: 'No se pudo descargar la plantilla.'});
       }
     });
   }

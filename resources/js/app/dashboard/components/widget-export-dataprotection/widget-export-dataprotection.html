@@ -1,0 +1,57 @@
+<p-card [style]="{ overflow: 'hidden' }">
+    <ng-template pTemplate="content">
+        <div class="flex flex-col h-full">
+            
+            <div class="flex-1 flex flex-col gap-2">
+
+                <div class="font-semibold text-lg flex justify-between items-center mb-6">
+                    <span>Exportar cláusula de empleados</span>
+                    <i class="pi pi-question-circle"
+                        pTooltip="Permite subir un archivo .CSV con una lista de empleados y generar el documento de cláusula de protección de datos por cada uno de ellos."
+                        [autoHide]="false" tooltipPosition="right"></i>
+                </div>
+
+                <div class="relative flex-grow flex items-center justify-center">
+                    <div class="w-full h-full rounded-lg overflow-hidden relative">
+                        <img alt="Placeholder" class="w-full h-full object-cover"
+                            src="assets/images/backgroundexport2.png" class="filter grayscale" />
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                            <p-fileupload #fileUploadRef mode="basic" name="file" accept=".csv" [auto]="true"
+                                [customUpload]="true" (uploadHandler)="onUploadCsv($event)" chooseLabel="Subir CSV"
+                                chooseIcon="pi pi-upload" [showUploadButton]="false" [showCancelButton]="false">
+                            </p-fileupload>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div>
+                    <p-button label="Descargar plantilla CSV" icon="pi pi-file" iconPos="top" variant="outlined"
+                        severity="secondary" styleClass="w-full !justify-start"
+                        (click)="onDownloadTemplate()"></p-button>
+
+                </div>
+
+
+
+                <div class="flex items-center justify-center gap-2">
+
+                    <p-button label="Descargar" icon="pi pi-download" iconPos="top" variant="outlined"
+                        severity="success" class="flex-1" styleClass="w-full !justify-start"
+                        (click)="onDownloadContracts()" [disabled]="isProcessing || !downloadZipUrl">
+                    </p-button>
+
+                    <p-divider layout="vertical"></p-divider>
+
+                    <p-button label="Enviar por email" icon="pi pi-envelope" iconPos="top" variant="outlined"
+                        severity="info" class="flex-1" styleClass="w-full !justify-start"
+                        [disabled]="!sendMailBatchToken || isProcessing" (click)="onSendContractsByEmail()"></p-button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-card>
+
+<p-toast position="bottom-right"></p-toast>
