@@ -34,10 +34,6 @@ return new class extends Migration
             $table->date('request_date')->nullable();
             $table->text('required_documentation')->nullable();
             $table->string('filepath')->nullable();
-
-            //para solicitudes padre e hijas
-            $table->foreignId('parent_id')->nullable()->after('id')->constrained('data_rights_requests')->onDelete('set null');
-
             $table->timestamps();
         });
     }
