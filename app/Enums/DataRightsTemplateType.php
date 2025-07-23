@@ -37,12 +37,35 @@ enum DataRightsTemplateType: string
      */
     public function getViewPath(): string
     {
-        // La sintaxis 'ejer-derechos.solicitudes' se traduce en 'resources/views/ejer-derechos/solicitudes'
         return match ($this) {
             self::EJERCICIO_ACCESO, self::EJERCICIO_RECTIFICACION, self::EJERCICIO_SUPRESION, self::EJERCICIO_OPOSICION, self::EJERCICIO_LIMITACION => 'ejer-derechos.solicitudes.' . $this->value,
             self::RESPUESTA_ACCESO, self::RESPUESTA_RECTIFICACION, self::RESPUESTA_SUPRESION, self::RESPUESTA_OPOSICION, self::RESPUESTA_LIMITACION => 'ejer-derechos.respuestas-fav.' . $this->value,
             self::RESPUESTA_DESESTIMATORIA_ACCESO, self::RESPUESTA_DESESTIMATORIA_RECTIFICACION, self::RESPUESTA_DESESTIMATORIA_SUPRESION, self::RESPUESTA_DESESTIMATORIA_OPOSICION, self::RESPUESTA_DESESTIMATORIA_LIMITACION => 'ejer-derechos.respuestas-desfav.' . $this->value,
             self::REQUERIMIENTO_SUBSANACION => 'ejer-derechos.solicitud-documentacion.' . $this->value,
+        };
+    }
+
+    /**
+     * Devuelve el nombre del campo de la BBDD que almacena el contenido principal de la respuesta.
+     */
+    public function getRequiredContentField(): ?string
+    {
+        return match ($this) {
+            // Respuestas Favorables
+            self::RESPUESTA_ACCESO => 'information_provided',
+            self::RESPUESTA_RECTIFICACION => 'rectified_data',
+            self::RESPUESTA_SUPRESION => 'deleted_data',
+            self::RESPUESTA_LIMITACION => 'limitation_applied',
+            self::RESPUESTA_OPOSICION => null, // Oposición favorable no tiene campo de texto, solo es una notificación
+
+            // Respuestas Desfavorables
+            self::RESPUESTA_DESESTIMATORIA_ACCESO, self::RESPUESTA_DESESTIMATORIA_RECTIFICACION, self::RESPUESTA_DESESTIMATORIA_SUPRESION, self::RESPUESTA_DESESTIMATORIA_OPOSICION, self::RESPUESTA_DESESTIMATORIA_LIMITACION => 'denial_reasons',
+            
+            // Otros
+            self::REQUERIMIENTO_SUBSANACION => 'required_documentation',
+
+            // Las solicitudes iniciales no tienen campo de contenido de respuesta
+            default => null,
         };
     }
 
