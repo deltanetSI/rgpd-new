@@ -33,9 +33,11 @@ export interface ColumnConfig {
   templateUrl: './datatable.html',
   styleUrls: ['./datatable.css']
 })
-export class Datatable<T extends object> { // <T extends object> para asegurar que sea un objeto
+export class Datatable<T extends object> {
 
   @ViewChild('dt') dt!: Table;
+
+  @Input() loading = false; 
 
   @Input() columns: ColumnConfig[] = [];
   @Input() data: T[] = [];

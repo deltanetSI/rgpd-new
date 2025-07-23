@@ -155,7 +155,6 @@ class EmployeeImportController extends Controller
                 $pdfStoragePath = $orgFolder . '/' . $pdfFileName;
                 $pdfFullPath = storage_path('app/' . $pdfStoragePath);
 
-                // **NUEVA CORRECCIÓN: Asegurarse de que el directorio existe antes de guardar el PDF.**
                 $directoryPath = dirname($pdfFullPath);
                 if (!is_dir($directoryPath)) {
                     Log::info("El directorio no existe. Creándolo recursivamente en: {$directoryPath}");

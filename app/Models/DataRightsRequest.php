@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\DataRightsTemplateType;
 
 class DataRightsRequest extends Model
 {
@@ -54,6 +55,7 @@ class DataRightsRequest extends Model
      * @var array<string, string>
      */
     protected $casts = [
+        'template_type' => DataRightsTemplateType::class,
         'date' => 'date',
         'request_date' => 'date',
     ];

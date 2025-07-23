@@ -8,7 +8,6 @@ use App\Http\Controllers\DocumentationController;
 use App\Http\Controllers\EmployeeImportController;
 use App\Http\Controllers\DataRightsRequestController;
 
-
 // Endpoints de usuario autenticado
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     $user = $request->user();
@@ -26,6 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->put('/user/profile', [UserController::class, 'updateProfile']); 
 Route::middleware('auth:sanctum')->put('/user/password', [UserController::class, 'updatePassword']); 
+
 
 // Ejemplo de rutas protegidas por roles y permisos
 Route::middleware(['auth:sanctum', 'role:admin'])->get('/admin', function () {
@@ -71,6 +71,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::get('/employees/download-zip', [EmployeeImportController::class, 'downloadZip'])->name('employees.downloadZip');
     Route::post('/employees/send-contracts', [EmployeeImportController::class, 'sendContractsToEmployees']);
+
+
+    // Solicitudes de derechos
+    Route::post('/exercise-of-rights', [DataRightsRequestController::class, 'store']);
 
 
     //ejercicio de derechos

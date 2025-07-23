@@ -7,7 +7,7 @@
     <app-sidebar *ngIf="isBrowser" [(visible)]="sidebarVisible" [modal]="isMobile" [fullScreen]="isMobile"></app-sidebar>
 
     <main class="app-main-content flex-grow overflow-auto" [ngClass]="{'app-main-content-shifted': sidebarVisible && !isMobile}">
-    <div class="app-content-area">
+    <div class="app-content-area max-w-screen-2xl mx-auto">
 
       <router-outlet></router-outlet>
 
