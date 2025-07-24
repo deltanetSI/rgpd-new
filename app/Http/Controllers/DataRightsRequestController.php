@@ -12,6 +12,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Date;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+use Illuminate\Support\Facades\Log;
+
+
 class DataRightsRequestController extends Controller
 {
    
@@ -20,8 +23,14 @@ class DataRightsRequestController extends Controller
      * Lista los registros. Por defecto, solo las solicitudes iniciales (sin padre).
      * Para ver todo, se puede pasar ?include_responses=1
      */
+    
     public function index(Request $request)
     {
+        Log::info('Acceso a DataRightsRequestController@index', [
+            'user_id' => $request->user()?->id,
+            'params' => $request->all(),
+        ]);
+
         $request->validate([
             'organization_id' => 'sometimes|required|integer|exists:organizations,id',
             'include_responses' => 'sometimes|boolean',
@@ -30,14 +39,27 @@ class DataRightsRequestController extends Controller
         $query = DataRightsRequest::query()->with('children')->latest();
 
         if (!$request->boolean('include_responses')) {
-            $query->whereNull('parent_id'); // Por defecto, solo las solicitudes raíz
+            Log::debug('Filtrando solo solicitudes raíz (sin respuestas asociadas)');
+            $query->whereNull('parent_id');
+        } else {
+            Log::debug('Incluyendo solicitudes y respuestas asociadas');
         }
 
         if ($request->has('organization_id')) {
+            Log::debug('Filtrando por organización', [
+                'organization_id' => $request->organization_id,
+            ]);
             $query->where('organization_id', $request->organization_id);
         }
 
-        return response()->json($query->paginate(15));
+        $result = $query->paginate(15);
+
+        Log::info('Resultados paginados recuperados', [
+            'total' => $result->total(),
+            'current_page' => $result->currentPage(),
+        ]);
+
+        return response()->json($result);
     }
 
     /**
@@ -45,6 +67,10 @@ class DataRightsRequestController extends Controller
      */
     public function store(Request $request)
     {
+        // <-- CAMBIO CLAVE: Lógica de mapeo y validación centralizada aquí
+        $templateEnum = DataRightsTemplateType::from($request->input('template_type'));
+        $targetField = $templateEnum->getRequestContentField();
+
         $validatedData = $request->validate([
             'organization_id' => 'required|integer|exists:organizations,id',
             'template_type' => ['required', 'string', Rule::in(DataRightsTemplateType::initialRequestTypes())],
@@ -54,6 +80,9 @@ class DataRightsRequestController extends Controller
             'city' => 'required|string|max:255',
             'date' => 'nullable|date',
         ]);
+        if ($targetField) {
+            $validationRules['request_content'] = 'required|string';
+        }
 
         if (empty($validatedData['date'])) {
             $validatedData['date'] = Date::now();
@@ -159,14 +188,17 @@ class DataRightsRequestController extends Controller
      /**
      * Gestiona la descarga segura de un documento.
      */
-    public function download(Request $request, DataRightsRequest $dataRightsRequest): StreamedResponse
+    public function download(Request $request, DataRightsRequest $dataRightsRequest)
     {
         // CORRECCIÓN: Usamos $request->user() para una mejor inferencia de tipos por parte del linter.
         $user = $request->user();
 
-        // 1. Autorización: Verificamos que el usuario autenticado pertenece a la organización del documento.
-        if ($user->organization_id !== $dataRightsRequest->organization_id) {
-            abort(403, 'Unauthorized action.');
+        // 1. Autorización: Permitimos acceso si el usuario es admin o pertenece a la organización del documento.
+        if (
+            !$user->hasRole('admin') &&
+            $user->organization_id !== $dataRightsRequest->organization_id
+        ) {
+            abort(403, 'Acción no autorizada.');
         }
 
         // 2. Verificación: Comprobamos que el archivo existe en el disco privado.
@@ -175,9 +207,14 @@ class DataRightsRequestController extends Controller
         }
 
         // 3. Descarga: Servimos el archivo para que el navegador lo descargue.
-        
-        return Storage::disk('local')->download($dataRightsRequest->filepath);
+        $fullPath = Storage::disk('local')->path($dataRightsRequest->filepath);
+
+        return response()->download($fullPath);
     }
+
+
+
+
 
     /**
      * Centraliza la creación y guardado del PDF.

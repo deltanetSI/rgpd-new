@@ -46,9 +46,28 @@ enum DataRightsTemplateType: string
     }
 
     /**
+     * Devuelve el nombre del campo de la BBDD que almacena el contenido especifico de algunas de las solicitudes
+     */
+    public function getRequestContentField(): ?string
+    {
+        return match ($this) {
+            // campos de solicitudes iniciales que hay que rellenar que no son  generales.
+            self::EJERCICIO_ACCESO => null,
+            self::EJERCICIO_RECTIFICACION => 'data_to_rectify',
+            self::EJERCICIO_SUPRESION => 'data_to_delete',
+            self::EJERCICIO_LIMITACION => 'limitation_details',
+            self::EJERCICIO_OPOSICION => 'reasons_for_opposition',
+
+            
+            default => null,
+        };
+    }
+
+    /**
      * Devuelve el nombre del campo de la BBDD que almacena el contenido principal de la respuesta.
      */
     public function getRequiredContentField(): ?string
+
     {
         return match ($this) {
             // Respuestas Favorables
