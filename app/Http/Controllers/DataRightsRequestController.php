@@ -36,7 +36,9 @@ class DataRightsRequestController extends Controller
             'include_responses' => 'sometimes|boolean',
         ]);
 
-        $query = DataRightsRequest::query()->with('children')->latest();
+        $query = DataRightsRequest::query()
+            ->with(['children', 'organization:name'])
+            ->latest();
 
         if (!$request->boolean('include_responses')) {
             Log::debug('Filtrando solo solicitudes raíz (sin respuestas asociadas)');
