@@ -37,7 +37,7 @@ class DataRightsRequestController extends Controller
         ]);
 
         $query = DataRightsRequest::query()
-            ->with(['children', 'organization:name'])
+            ->with(['children', 'organization:id,name'])
             ->latest();
 
         if (!$request->boolean('include_responses')) {
