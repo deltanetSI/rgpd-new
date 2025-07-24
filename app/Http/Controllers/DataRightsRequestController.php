@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Log;
 
 class DataRightsRequestController extends Controller
 {
-   
-    
+
+
     /**
      * Lista los registros. Por defecto, solo las solicitudes iniciales (sin padre).
      * Para ver todo, se puede pasar ?include_responses=1
@@ -89,7 +89,7 @@ class DataRightsRequestController extends Controller
         if (empty($validatedData['date'])) {
             $validatedData['date'] = Date::now();
         }
-        
+
         $dataRequest = DataRightsRequest::create($validatedData);
 
         $filepath = $this->generateAndSavePdf($dataRequest);
@@ -104,7 +104,7 @@ class DataRightsRequestController extends Controller
             'download_url' => $downloadUrl,
         ], 201);
     }
-    
+
     /**
      * Genera una RESPUESTA o un REQUERIMIENTO a partir de una solicitud existente.
      */
@@ -151,7 +151,7 @@ class DataRightsRequestController extends Controller
         $filepath = $this->generateAndSavePdf($responseRequest);
         $responseRequest->filepath = $filepath;
         $responseRequest->save();
-        
+
         $downloadUrl = route('data-rights-requests.download', ['dataRightsRequest' => $responseRequest->id]);
 
         return response()->json([
@@ -160,7 +160,7 @@ class DataRightsRequestController extends Controller
             'download_url' => $downloadUrl,
         ], 201);
     }
-    
+
     /**
      * Muestra un registro específico con sus respuestas (hijos) y su solicitud original (padre).
      */
@@ -168,7 +168,7 @@ class DataRightsRequestController extends Controller
     {
         return response()->json($dataRightsRequest->load(['organization', 'children', 'parent']));
     }
-    
+
     public function destroy(DataRightsRequest $dataRightsRequest)
     {
         if ($dataRightsRequest->filepath) {
@@ -187,7 +187,7 @@ class DataRightsRequestController extends Controller
     }
 
 
-     /**
+    /**
      * Gestiona la descarga segura de un documento.
      */
     public function download(Request $request, DataRightsRequest $dataRightsRequest)
@@ -232,7 +232,7 @@ class DataRightsRequestController extends Controller
         $organizationName = Str::slug($dataRequest->organization->name);
         // Se añade un timestamp para asegurar que el nombre del fichero es único
         $documentName = Str::slug($dataRequest->template_type->value . ' ' . $dataRequest->full_name . '-' . now()->timestamp) . '.pdf';
-        
+
         $relativePath = "ejercicio_derechos/{$organizationName}/{$documentName}";
 
         // El método save() de Spatie PDF necesita una ruta absoluta.
@@ -245,6 +245,4 @@ class DataRightsRequestController extends Controller
 
         return $relativePath;
     }
-    
-  
 }

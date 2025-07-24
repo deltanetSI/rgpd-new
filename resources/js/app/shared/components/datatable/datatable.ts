@@ -8,6 +8,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { SkeletonModule } from 'primeng/skeleton';
+import { HumanizePipe } from '../../pipes/humanize-pipe';
 
 export interface ColumnConfig {
   field: string;
@@ -28,7 +29,8 @@ export interface ColumnConfig {
     FormsModule,
     IconFieldModule,
     InputIconModule,
-    SkeletonModule
+    SkeletonModule,
+    HumanizePipe,
   ],
   templateUrl: './datatable.html',
   styleUrls: ['./datatable.css']

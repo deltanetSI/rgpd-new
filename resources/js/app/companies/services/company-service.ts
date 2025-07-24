@@ -15,12 +15,12 @@ export class CompanyService {
 
     // Crear 
     createCompany(CompanyDto: CompanyCreateDto): Observable<CompanyResponseDto> {
-        return this.httpClient.post<CompanyResponseDto>(environment.apiUrl + "/company", CompanyDto);
+        return this.httpClient.post<CompanyResponseDto>(environment.apiUrl + "/company", CompanyDto, { withCredentials: true });
     }
 
     // Obtener todas las compañías
     getAllCompanies(): Observable<CompanyResponseDto[]> {
-        return this.httpClient.get<CompanyResponseDto[]>(`${environment.apiUrl}/companies/all`);
+        return this.httpClient.get<CompanyResponseDto[]>(`${environment.apiUrl}/companies/all`, { withCredentials: true });
     }
 
 

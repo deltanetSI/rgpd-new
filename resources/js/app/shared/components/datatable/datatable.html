@@ -39,13 +39,21 @@
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-rowData>
-        <tr>
-          <td *ngFor="let col of columns">
-            {{ rowData[col.field] }}
-          </td>
-        </tr>
+<ng-template pTemplate="body" let-rowData>
+  <tr>
+    <td *ngFor="let col of columns">
+      <ng-container *ngIf="col.field === 'date'; else generalCell">
+        {{ rowData[col.field] | date:'dd/MM/yyyy' }}
+      </ng-container>
+      <ng-template #generalCell>
+        {{ rowData[col.field] | humanize }}
       </ng-template>
+    </td>
+  </tr>
+</ng-template>
+
+
+
 
       <ng-template pTemplate="emptymessage">
         <tr>
@@ -59,7 +67,7 @@
 
 
 <ng-template #loadingSkeleton>
-  <div class="card overflow-x-hidden" style="max-width: 100%" >
+  <div class="card overflow-x-hidden" style="max-width: 100%">
     <p-table>
       <ng-template pTemplate="header">
         <tr *ngFor="let i of [].constructor(10)">
