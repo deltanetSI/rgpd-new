@@ -65,11 +65,12 @@ class DataRightsRequestController extends Controller
         $dataRequest->filepath = $filepath;
         $dataRequest->save();
 
-        // CORRECCIÓN: Se elimina temporaryUrl. El frontend construirá la URL de descarga
-        // usando la ruta del método `download` y el ID del recurso.
+        $downloadUrl = route('data-rights-requests.download', ['dataRightsRequest' => $dataRequest->id]);
+
         return response()->json([
             'message' => 'Initial request generated and registered successfully.',
             'data' => $dataRequest->load('organization:id,name'),
+            'download_url' => $downloadUrl,
         ], 201);
     }
     
@@ -120,10 +121,12 @@ class DataRightsRequestController extends Controller
         $responseRequest->filepath = $filepath;
         $responseRequest->save();
         
-        // CORRECCIÓN: Se elimina temporaryUrl.
+        $downloadUrl = route('data-rights-requests.download', ['dataRightsRequest' => $responseRequest->id]);
+
         return response()->json([
             'message' => 'Response document generated successfully.',
             'data' => $responseRequest->load('organization:id,name'),
+            'download_url' => $downloadUrl,
         ], 201);
     }
     
@@ -167,13 +170,13 @@ class DataRightsRequestController extends Controller
         }
 
         // 2. Verificación: Comprobamos que el archivo existe en el disco privado.
-        if (!$dataRightsRequest->filepath || !Storage::disk('private')->exists($dataRightsRequest->filepath)) {
+        if (!$dataRightsRequest->filepath || !Storage::disk('local')->exists($dataRightsRequest->filepath)) {
             abort(404, 'File not found.');
         }
 
         // 3. Descarga: Servimos el archivo para que el navegador lo descargue.
         
-        return Storage::disk('private')->download($dataRightsRequest->filepath);
+        return Storage::disk('local')->download($dataRightsRequest->filepath);
     }
 
     /**
@@ -184,16 +187,24 @@ class DataRightsRequestController extends Controller
         $dataRequest->load('organization');
         $viewData = $this->prepareViewData($dataRequest);
 
-        $pdf = Pdf::loadView($dataRequest->template_type->getViewPath(), $viewData);
+        $pdf = Pdf::view($dataRequest->template_type->getViewPath(), $viewData);
 
+        // Slug del nombre de la organización para usar en la ruta
         $organizationName = Str::slug($dataRequest->organization->name);
-        $documentName = Str::slug($dataRequest->template_type->value . ' ' . $dataRequest->full_name) . '.pdf';
+        // Se añade un timestamp para asegurar que el nombre del fichero es único
+        $documentName = Str::slug($dataRequest->template_type->value . ' ' . $dataRequest->full_name . '-' . now()->timestamp) . '.pdf';
         
-        $filepath = "ejercicio_derechos/{$organizationName}/{$documentName}";
+        $relativePath = "ejercicio_derechos/{$organizationName}/{$documentName}";
 
-        Storage::disk('private')->put($filepath, $pdf->output());
+        // El método save() de Spatie PDF necesita una ruta absoluta.
+        $fullPath = Storage::disk('local')->path($relativePath);
 
-        return $filepath;
+        // Aseguramos que el directorio existe antes de guardar.
+        Storage::disk('local')->makeDirectory(dirname($relativePath));
+
+        $pdf->save($fullPath);
+
+        return $relativePath;
     }
     
   
