@@ -40,7 +40,7 @@ export class SidebarComponent {
         },
         {
           label: 'Responsables',
-          icon: 'pi pi-user-plus',
+          icon: 'pi pi-briefcase',
           routerLink: '/organization/companies'
         }]
     },
@@ -58,6 +58,11 @@ export class SidebarComponent {
           icon: 'pi pi-book',
           routerLink: '/documentation/legal'
         }]
+    },
+    {
+      label: 'Ejercicio derechos',
+      icon: 'pi pi-users',
+      routerLink: '/exercise-of-rights',
     },
 
 

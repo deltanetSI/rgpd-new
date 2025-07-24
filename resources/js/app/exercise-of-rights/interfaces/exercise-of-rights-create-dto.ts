@@ -5,5 +5,6 @@ export interface ExerciseOfRightsCreateDto {
   full_name: string;       
   full_address: string;    
   nif: string;             
-  city: string;                      
+  city: string;      
+  request_content: string;
 }

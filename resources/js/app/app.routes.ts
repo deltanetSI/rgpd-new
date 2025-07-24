@@ -74,7 +74,9 @@ export const routes: Routes = [
       { path: 'usersettings', loadComponent: () => import('./auth/components/user-settings/user-settings').then(m => m.UserSettings),
         data: { title: 'Configuracion de Usuario' }
       } ,
-      
+      { path: 'exercise-of-rights', loadComponent: () => import('./exercise-of-rights/components/exercise-of-rights/exercise-of-rights').then(m => m.ExerciseOfRights),
+        data: { title: 'Ejercicio derechos' }
+      },
       { path: '**', redirectTo: 'dashboard' }
     ]
   },

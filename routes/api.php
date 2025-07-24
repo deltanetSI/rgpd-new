@@ -73,10 +73,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/employees/send-contracts', [EmployeeImportController::class, 'sendContractsToEmployees']);
 
 
-    // Solicitudes de derechos
-    Route::post('/exercise-of-rights', [DataRightsRequestController::class, 'store']);
-
-
+  
     //ejercicio de derechos
     Route::post('/data-rights-requests/{originalRequest}/responses', [DataRightsRequestController::class, 'generateResponse'])->name('data-rights-requests.responses.store');
     // Ruta para la descarga del PDF

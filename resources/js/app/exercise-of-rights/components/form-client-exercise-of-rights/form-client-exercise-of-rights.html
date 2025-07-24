@@ -1,5 +1,5 @@
-<p-dialog header="Crear Nuevo Cliente" [(visible)]="visible" [modal]="true" [closable]="false" (onHide)="onHideDialog()"
-  [style]="{ width: '45rem' }" maskStyleClass="backdrop-blur-md" styleClass="p-dialog-custom-style">
+<p-dialog header="Crear Nuevo Cliente" [contentStyle]="{'overflow':'visible'}" [(visible)]="visible" [modal]="true"
+  [closable]="false" (onHide)="onHideDialog()" [style]="{ width: '45rem' }" maskStyleClass="backdrop-blur-md">
   <ng-template pTemplate="header">
     <h3 class="text-lg font-semibold">Crear nueva solicitud</h3>
   </ng-template>
@@ -55,6 +55,19 @@
       </div>
 
 
+      <!-- Campo: Dirección -->
+      <div class="flex flex-col gap-1 w-full">
+        <p-floatlabel class="w-full">
+          <input id="address" pInputText formControlName="address" class="w-full" [invalid]="isInvalid('address')" />
+          <label for="address">Dirección</label>
+        </p-floatlabel>
+        @if (isInvalid('address')) {
+        @if (clientForm.get('address')?.hasError('required')) {
+        <p-message severity="error" size="small" variant="simple">La dirección es obligatoria.</p-message>
+        }
+        }
+      </div>
+
 
     </div>
 
@@ -108,33 +121,25 @@
         }
       </div>
 
+      <div class="flex flex-col gap-1 w-full">
+        <p-floatlabel class="w-full">
+          <p-select [options]="exercises" formControlName="exercise" class="w-full" (onChange)="onExerciseChange($event.value)" />
+          <label for="exercise">Tipo de ejercicio</label>
+        </p-floatlabel>
+        @if (isInvalid('exerciseType')) {
+        @if (clientForm.get('exerciseType')?.hasError('required')) {
+        <p-message severity="error" size="small" variant="simple">La dirección es obligatoria.</p-message>
+        }
+        }
+      </div>
     </div>
 
-    <!-- Campo: Dirección -->
-    <div class="flex flex-col gap-1 w-full">
-      <p-floatlabel class="w-full">
-        <input id="address" pInputText formControlName="address" class="w-full" [invalid]="isInvalid('address')" />
-        <label for="address">Dirección</label>
-      </p-floatlabel>
-      @if (isInvalid('address')) {
-      @if (clientForm.get('address')?.hasError('required')) {
-      <p-message severity="error" size="small" variant="simple">La dirección es obligatoria.</p-message>
-      }
-      }
-    </div>
 
-    <p-divider align="left" type="solid" styleClass="!my-0 !px-0">
-      <b>Tipo de ejercicio</b>
-    </p-divider>
-
-    <div class="flex flex-col gap-1 w-full">
-      <p-select [appendTo]="'body'" [options]="exercises" formControlName="exercise" class="!w-full md:w-56" />
-      @if (isInvalid('exerciseType')) {
-      @if (clientForm.get('exerciseType')?.hasError('required')) {
-      <p-message severity="error" size="small" variant="simple">La dirección es obligatoria.</p-message>
-      }
-      }
-    </div>
+    <p-floatlabel variant="in" class="w-full">
+      <textarea pTextarea id="over_label" formControlName="details" rows="3"
+        class="w-full h-auto resize-none"></textarea>
+  <label for="over_label">{{ labelDetails }}</label>
+    </p-floatlabel>
 
 
 
@@ -151,3 +156,6 @@
     </div>
   </ng-template>
 </p-dialog>
+
+
+<p-toast position="bottom-right" key="successMessage" />

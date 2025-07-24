@@ -20,7 +20,12 @@
                     <b>Seleccionar solicitud existente</b>
                 </p-divider>
 
-                <p-select placeholder="Selecciona una solicitud" [editable]="true" optionLabel="Solicitudes" class="!w-full" />
+                <p-select placeholder="Selecciona una solicitud" optionLabel="full_name"
+                 [options]="availableRequests" 
+                 [(ngModel)]="selectedRequest"
+                 [loading]="isLoadingRequests"
+                 styleClass="!w-full"
+                 [filter]="true" filterBy="full_name" [showClear]="true"/>
 
 
             </div>
