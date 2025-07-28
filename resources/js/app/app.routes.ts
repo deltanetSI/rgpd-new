@@ -57,25 +57,25 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }, // Default route after login
       { path: 'dashboard', loadComponent: () => import('./dashboard/components/dashboard/dashboard').then(m => m.DashboardComponent),
-        data: { title: 'Inicio' }
+        title: 'RGPD | Inicio'
       },
       { path: 'organization/companies', loadComponent: () => import('./companies/components/companies/companies').then(m => m.OrganizationComponent),
-        data: { title: 'Responsables' }
+        title: 'RGPD | Responsables'
       } ,
       { path: 'organization/users', loadComponent: () => import('./users/components/users/users').then(m => m.Users),
-        data: { title: 'Usuarios' }
+        title: 'RGPD | Usuarios'
       } ,
       { path: 'documentation/aepd', loadComponent: () => import('./documentation/components/aepd/aepd').then(m => m.Aepd),
-        data: { title: 'Documentacion AEPD' }
+        title: 'RGPD | Documentación AEPD'
       } ,
       { path: 'documentation/legal', loadComponent: () => import('./documentation/components/legal/legal').then(m => m.Legal),
-        data: { title: 'Documentacion Legal' }
+        title: 'RGPD | Documentación legal'
       } ,
       { path: 'usersettings', loadComponent: () => import('./auth/components/user-settings/user-settings').then(m => m.UserSettings),
-        data: { title: 'Configuracion de Usuario' }
+        title: 'RGPD | Configuracion de Usuario'
       } ,
       { path: 'exercise-of-rights', loadComponent: () => import('./exercise-of-rights/components/exercise-of-rights/exercise-of-rights').then(m => m.ExerciseOfRights),
-        data: { title: 'Ejercicio derechos' }
+        title: 'RGPD | Ejercicio derechos'
       },
       { path: '**', redirectTo: 'dashboard' }
     ]

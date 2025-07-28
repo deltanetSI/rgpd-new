@@ -13,4 +13,10 @@ export interface ExerciseOfRightsResponseDto {
   parent_id: number | null;
   created_at: string;
   updated_at: string;
+  organization?: OrganizationDto;
+}
+
+export interface OrganizationDto {
+  id: number;
+  name: string;
 }

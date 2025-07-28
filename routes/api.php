@@ -56,7 +56,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Organizations
     Route::get('companies/all', [OrganizationController::class, 'index']);
-  
+    Route::put('company/{id}', [OrganizationController::class, 'update']);
+    Route::get('company/{id}', [OrganizationController::class, 'show']);
+    Route::delete('company/{id}', [OrganizationController::class, 'destroy']);
   
     // Empleados
     Route::post('employees/import', [EmployeeImportController::class, 'import']);

@@ -10,6 +10,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { providePrimeNG } from 'primeng/config';
 import customtheme from './customtheme';
 import { MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 
 
 
@@ -27,6 +28,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     MessageService,
+    ConfirmationService,
     provideRouter(routes), provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),
         providePrimeNG({

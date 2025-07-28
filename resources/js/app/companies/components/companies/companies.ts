@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, TemplateRef, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
-import { TableModule } from 'primeng/table'; // Importamos Table y TableModule
+import { TableModule } from 'primeng/table'; 
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { FormsModule } from '@angular/forms';
-import { Datatable } from '../../../shared/components/datatable/datatable';
+import { ColumnBodyContext, Datatable, ColumnConfig } from '../../../shared/components/datatable/datatable';
 import { Createcompany } from '../createcompany/create-company';
 import { CompanyService } from '../../services/company-service';
 import { CompanyResponseDto } from '../../interfaces/company-response-dto';
@@ -27,21 +27,32 @@ import { CompanyResponseDto } from '../../interfaces/company-response-dto';
   ],
   templateUrl: './companies.html',
   styleUrls: ['./companies.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class OrganizationComponent implements OnInit {
+export class OrganizationComponent implements OnInit, AfterViewInit {
+
+  // Referencia a la fila y la compania a editar
+  @ViewChild('viewEditCompanyBodyTemplate') viewEditCompanyBodyTemplate!: TemplateRef<ColumnBodyContext<CompanyResponseDto>>;
+  
+  selectedCompanyForEdit: CompanyResponseDto | null = null; 
 
   loadingCompanies = true;
 
   showDialogFlag = false;
 
   companies: CompanyResponseDto[] = [];
+
   private cdr = inject(ChangeDetectorRef);
 
   private companyService = inject(CompanyService);
 
-  cols = [
+  cols: ColumnConfig<CompanyResponseDto>[] = [
+    {
+      header: '',
+      field: 'actions',
+      filter: false,
+      minWidth: '80px'
+    },
     { field: 'name', header: 'Nombre', filter: true, minWidth: '200px' },
     { field: 'legal_name', header: 'Razón social', filter: true, minWidth: '300px' },
     { field: 'tax_id', header: 'CIF', filter: true },
@@ -63,11 +74,24 @@ export class OrganizationComponent implements OnInit {
     { field: 'dpd_id', header: 'DPD', filter: true },
   ];
 
+  globalFilterFields = ['name', 'legal_name', 'tax_id', 'dpd_id', 'email', 'phone', 'city', 'province', 'country'];
+
+
+  ngAfterViewInit(): void {
+    const actionsCol = this.cols.find(col => col.field === 'actions');
+    if (actionsCol) {
+      actionsCol.bodyTemplate = this.viewEditCompanyBodyTemplate; 
+    }
+
+    this.cdr.detectChanges();
+  }
+
   ngOnInit(): void {
     this.loadCompanies();
   }
 
   loadCompanies(): void {
+    this.loadingCompanies = true;	
     this.companyService.getAllCompanies().subscribe({
       next: (data: CompanyResponseDto[]) => {
         this.companies = data;
@@ -78,13 +102,39 @@ export class OrganizationComponent implements OnInit {
       error: (err) => {
         console.error('Error al cargar las compañías:', err);
         this.loadingCompanies = false;
+        this.cdr.detectChanges();
       }
     });
   }
 
-  globalFilterFields = ['name', 'legal_name', 'tax_id', 'dpd_id', 'email', 'phone', 'city', 'province', 'country'];
+  onShowEditCompany(companyId: string): void { 
+
+    this.companyService.getCompany(companyId).subscribe({
+      next: (company: CompanyResponseDto) => {
+        this.selectedCompanyForEdit = company; 
+        this.showDialogFlag = true; 
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al cargar la compañía para edición:', err);
+      }
+    });
+  }
+
+  onShowCreateCompanyDialog() {
+    this.selectedCompanyForEdit = null; 
+    this.showDialogFlag = true;
+  }
 
   handleDialogClose() {
     this.showDialogFlag = false;
+    this.selectedCompanyForEdit=null;
   }
+
+
+  onCompanySaved(): void {
+    this.loadCompanies();
+  }
+
+
 }

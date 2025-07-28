@@ -23,12 +23,12 @@
 
         </div>
       </ng-template>
-
       <ng-template pTemplate="header">
         <tr>
-          <th *ngFor="let col of columns" [pSortableColumn]="col.field" [style.minWidth]="col.minWidth || '80px'">
-            {{ col.header }}
-            <p-sortIcon [field]="col.field"></p-sortIcon>
+          <th *ngFor="let col of columns" [style.minWidth]="col.minWidth || '80px'"
+            [pSortableColumn]="col.header ? col.field : ''"> {{ col.header || '' }}
+
+            <p-sortIcon *ngIf="col.header" [field]="col.field"></p-sortIcon>
           </th>
         </tr>
         <tr *ngIf="showColumnFilters">
@@ -39,18 +39,24 @@
         </tr>
       </ng-template>
 
-<ng-template pTemplate="body" let-rowData>
-  <tr>
-    <td *ngFor="let col of columns">
-      <ng-container *ngIf="col.field === 'date'; else generalCell">
-        {{ rowData[col.field] | date:'dd/MM/yyyy' }}
-      </ng-container>
-      <ng-template #generalCell>
-        {{ rowData[col.field] | humanize }}
+      <ng-template pTemplate="body" let-rowData>
+        <tr>
+          <td *ngFor="let col of columns">
+            <ng-container *ngIf="col.bodyTemplate; else defaultBodyContent">
+              <ng-container
+                *ngTemplateOutlet="col.bodyTemplate; context: { $implicit: rowData, col: col }"></ng-container>
+            </ng-container>
+            <ng-template #defaultBodyContent>
+              <ng-container *ngIf="col.field === 'date'; else generalCell">
+                {{ rowData[col.field!] | date:'dd/MM/yyyy' }}
+              </ng-container>
+              <ng-template #generalCell>
+                {{ rowData[col.field!] | humanize }}
+              </ng-template>
+            </ng-template>
+          </td>
+        </tr>
       </ng-template>
-    </td>
-  </tr>
-</ng-template>
 
 
 

@@ -1,6 +1,6 @@
-import { Component, Input, ViewChild, inject, PLATFORM_ID} from '@angular/core'; 
+import { Component, Input, ViewChild, inject, PLATFORM_ID, TemplateRef } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Table, TableModule } from 'primeng/table'; 
+import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
@@ -10,11 +10,18 @@ import { InputIconModule } from 'primeng/inputicon';
 import { SkeletonModule } from 'primeng/skeleton';
 import { HumanizePipe } from '../../pipes/humanize-pipe';
 
-export interface ColumnConfig {
+export interface ColumnBodyContext<T> {
+  $implicit: T;
+  col: ColumnConfig<T>;
+}
+
+
+export interface ColumnConfig<T> {
   field: string;
-  header: string;
+  header?: string;
   filter?: boolean;
-  minWidth?: string; 
+  minWidth?: string;
+  bodyTemplate?: TemplateRef<ColumnBodyContext<T>>;
 }
 
 @Component({
@@ -39,9 +46,9 @@ export class Datatable<T extends object> {
 
   @ViewChild('dt') dt!: Table;
 
-  @Input() loading = false; 
+  @Input() loading = false;
 
-  @Input() columns: ColumnConfig[] = [];
+  @Input() columns: ColumnConfig<T>[] = [];
   @Input() data: T[] = [];
 
   @Input() rows = 10;
@@ -61,4 +68,20 @@ export class Datatable<T extends object> {
   toggleColumnFilters(): void {
     this.showColumnFilters = !this.showColumnFilters;
   }
+
+
+  getPropertyValue(obj: T, field: string): unknown {
+    if (!obj || !field) {
+      return undefined;
+    }
+
+    if (!field.includes('.')) {
+      return (obj as Record<string, unknown>)[field];
+    }
+
+    return field.split('.').reduce((currentObj: unknown, key: string) => {
+      return currentObj && typeof currentObj === 'object' ? (currentObj as Record<string, unknown>)[key] : undefined;
+    }, obj);
+  }
+
 }

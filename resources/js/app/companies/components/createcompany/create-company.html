@@ -1,299 +1,300 @@
 <p-dialog maskStyleClass="backdrop-blur-md" header="Crear Nueva Organización" [(visible)]="visible" [modal]="true"
-  [style]="{ width: '50rem' }" [closable]="false" (onHide)="onHideDialog()" styleClass="p-dialog-custom-style">
+  [style]="{ width: '50rem' }" [closable]="true" (onHide)="onHideDialog()" contentStyleClass="!mb-2">
+
   <ng-template #header>
-    <h3 class="text-lg font-semibold">Crear Organización</h3>
+    @if(companyToEdit){
+    <h3 class="text-lg font-semibold">Actualizar responsable</h3>
+    }@else {
+    <h3 class="text-lg font-semibold">Crear responsable</h3>
+    }
   </ng-template>
 
   <!-- Envuelve el stepper en un formulario reactivo -->
   <form [formGroup]="companyForm" (ngSubmit)="saveOrganization()">
-    <p-stepper [value]="activeStep" class="w-full flex flex-col">
 
-      <p-step-list class="pt-4">
-        <p-step [value]="1">Datos generales</p-step>
-        <p-step [value]="2">Datos RGPD</p-step>
-      </p-step-list>
+    <ng-container *ngIf="visible">
 
-      <p-step-panels class="flex-grow md:pt-10">
-        <p-step-panel [value]="1">
-          <ng-template #content let-activateCallback="activateCallback">
-            <div class="grid grid-cols-1 md:grid-cols-2 mt-6 gap-8">
+      <p-stepper [value]="activeStep" class="w-full flex flex-col">
 
-              <div class="flex flex-col gap-1 w-full">
-                <p-floatlabel class="w-full">
-                  <input id="name" pInputText formControlName="name" class="w-full" [invalid]="isInvalid('name')" />
-                  <label for="name">Nombre de la empresa</label>
-                </p-floatlabel>
-                @if (isInvalid('name')) {
-                @if (companyForm.get('name')?.hasError('required')) {
-                <p-message severity="error" size="small" variant="simple">El nombre de la empresa es
-                  obligatorio.</p-message>
-                }
-                }
+        <p-step-list class="pt-4">
+          <p-step [value]="1">Datos generales</p-step>
+          <p-step [value]="2">Datos RGPD</p-step>
+        </p-step-list>
+
+        <p-step-panels class="flex-grow md:pt-10">
+          <p-step-panel [value]="1">
+            <ng-template #content let-activateCallback="activateCallback">
+              <div class="grid grid-cols-1 md:grid-cols-2 mt-6 gap-8">
+
+                <div class="flex flex-col gap-1 w-full">
+                  <p-floatlabel class="w-full">
+                    <input id="name" pInputText formControlName="name" class="w-full" />
+                    <label for="name">Nombre de la empresa</label>
+                  </p-floatlabel>
+                  @if (companyForm.get('name')?.hasError('required') && !companyForm.get('name')?.pristine) {
+                  <p-message severity="error" size="small" variant="simple">El nombre de la empresa es
+                    obligatorio.</p-message>
+                  }
+                </div>
+
+                <div class="flex flex-col gap-1 w-full">
+                  <p-floatlabel class="w-full">
+                    <input id="address" pInputText formControlName="address" class="w-full" />
+                    <label for="address">Dirección</label>
+                  </p-floatlabel>
+
+                  @if (companyForm.get('address')?.hasError('required') && !companyForm.get('address')?.pristine) {
+                  <p-message severity="error" size="small" variant="simple">La dirección es obligatoria.</p-message>
+                  }
+
+                </div>
+
+                <div class="flex flex-col gap-1 w-full">
+                  <p-floatlabel class="w-full">
+                    <p-inputMask inputId="taxId" mask="a99999999" formControlName="tax_id"></p-inputMask>
+                    <label for="taxId">C.I.F.</label>
+                  </p-floatlabel>
+                  @if (companyForm.get('tax_id')?.hasError('required') && !companyForm.get('tax_id')?.pristine) {
+                  <p-message severity="error" size="small" variant="simple">El C.I.F. es obligatorio.</p-message>
+                  }
+                  @if (companyForm.get('tax_id')?.hasError('pattern')) {
+                  <p-message severity="error" size="small" variant="simple">Formato de C.I.F. inválido.</p-message>
+                  }
+
+                </div>
+
+                <div class="flex flex-col gap-1 w-full">
+                  <p-floatlabel class="w-full">
+                    <p-inputMask inputId="phone" mask="999 999 999" formControlName="phone"
+                      class="w-full"></p-inputMask>
+                    <label for="phone">Teléfono</label>
+                  </p-floatlabel>
+                  @if (companyForm.get('phone')?.hasError('required') && !companyForm.get('phone')?.pristine) {
+                  <p-message severity="error" size="small" variant="simple">El teléfono es obligatorio.</p-message>
+                  }
+
+                </div>
+
+                <div class="flex flex-col gap-1 w-full">
+                  <p-floatlabel class="w-full">
+                    <input id="email" autocomplete="email" pInputText formControlName="email" class="w-full" />
+                    <label for="email">Correo electrónico</label>
+                  </p-floatlabel>
+                  @if (companyForm.get('email')?.hasError('required') && !companyForm.get('email')?.pristine) {
+                  <p-message severity="error" size="small" variant="simple">El correo electrónico es
+                    obligatorio.</p-message>
+                  }
+                  @if (companyForm.get('email')?.hasError('email')) {
+                  <p-message severity="error" size="small" variant="simple">Introduce un formato de correo electrónico
+                    válido.</p-message>
+
+                  }
+                </div>
+
+                <div class="flex flex-col gap-1 w-full">
+                  <p-floatlabel class="w-full">
+                    <p-select inputId="type" [options]="companyTypes" optionLabel="label" optionValue="value"
+                      formControlName="type" [editable]="false" class="w-full"></p-select>
+                    <label for="type">Tipo de organización</label>
+                  </p-floatlabel>
+                  @if (companyForm.get('type')?.hasError('required') && !companyForm.get('type')?.pristine) {
+                  <p-message severity="error" size="small" variant="simple">El tipo de organización es
+                    obligatorio.</p-message>
+
+                  }
+                </div>
+
+                <div class="flex flex-col gap-1 w-full">
+                  <p-floatlabel class="w-full">
+                    <input id="city" pInputText formControlName="city" class="w-full" />
+                    <label for="city">Localidad</label>
+                  </p-floatlabel>
+                  @if (companyForm.get('city')?.hasError('required') && !companyForm.get('city')?.pristine) {
+                  <p-message severity="error" size="small" variant="simple">La localidad es obligatoria.</p-message>
+
+                  }
+                </div>
+
+                <div class="flex flex-col gap-1 w-full">
+                  <p-floatlabel class="w-full">
+                    <input id="province" pInputText formControlName="province" class="w-full" />
+                    <label for="province">Provincia</label>
+                  </p-floatlabel>
+                  @if (companyForm.get('province')?.hasError('required') && !companyForm.get('province')?.pristine) {
+                  <p-message severity="error" size="small" variant="simple">La provincia es obligatoria.</p-message>
+
+                  }
+                </div>
+
+                <div class="flex flex-col gap-1 w-full">
+                  <p-floatlabel class="w-full">
+                    <p-inputMask inputId="postalCode" mask="99999" formControlName="postal_code"
+                      class="w-full"></p-inputMask>
+                    <label for="postalCode">Código Postal</label>
+                  </p-floatlabel>
+                  @if (companyForm.get('postal_code')?.hasError('required') &&
+                  !companyForm.get('postal_code')?.pristine) {
+                  <p-message severity="error" size="small" variant="simple">El código postal es obligatorio.</p-message>
+                  }
+                  @if (companyForm.get('postal_code')?.hasError('pattern')) {
+                  <p-message severity="error" size="small" variant="simple">Formato de código postal
+                    inválido.</p-message>
+
+                  }
+                </div>
+
+                <!-- Nuevos campos obligatorios según Laravel -->
+                <div class="flex flex-col gap-1 w-full">
+                  <p-floatlabel class="w-full">
+                    <input id="legalName" pInputText formControlName="legal_name" class="w-full" />
+                    <label for="legalName">Razón Social</label>
+                  </p-floatlabel>
+                  @if (companyForm.get('legal_name')?.hasError('required') && !companyForm.get('legal_name')?.pristine)
+                  {
+                  <p-message severity="error" size="small" variant="simple">La razón social es obligatoria.</p-message>
+                  }
+
+                </div>
+
+                <div class="flex flex-col gap-1 w-full">
+                  <p-floatlabel class="w-full">
+                    <input id="registeredAddress" pInputText formControlName="registered_address" class="w-full" />
+                    <label for="registeredAddress">Domicilio Social</label>
+                  </p-floatlabel>
+                  @if (companyForm.get('registered_address')?.hasError('required') &&
+                  !companyForm.get('registered_address')?.pristine) {
+                  <p-message severity="error" size="small" variant="simple">El domicilio social es
+                    obligatorio.</p-message>
+
+                  }
+                </div>
+
+                <div class="flex flex-col gap-1 w-full">
+                  <p-floatlabel class="w-full">
+                    <input id="country" pInputText formControlName="country" class="w-full" />
+                    <label for="country">País</label>
+                  </p-floatlabel>
+                  @if (companyForm.get('country')?.hasError('required') && !companyForm.get('country')?.pristine) {
+                  <p-message severity="error" size="small" variant="simple">El país es obligatorio.</p-message>
+                  }
+
+                </div>
+
+
+                <div class="flex justify-between items-center col-span-full">
+        <p-button label="Eliminar" icon="pi pi-trash" [outlined]="true" (click)="confirmDeleteCompany()" severity="danger"
+                    styleClass="!w-full" />
+                  <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right"
+                    (onClick)="activateCallback(2)" />
+                </div>
               </div>
+            </ng-template>
+          </p-step-panel>
 
-              <div class="flex flex-col gap-1 w-full">
-                <p-floatlabel class="w-full">
-                  <input id="address" pInputText formControlName="address" class="w-full"
-                    [invalid]="isInvalid('address')" />
-                  <label for="address">Dirección</label>
-                </p-floatlabel>
-                @if (isInvalid('address')) {
-                @if (companyForm.get('address')?.hasError('required')) {
-                <p-message severity="error" size="small" variant="simple">La dirección es obligatoria.</p-message>
-                }
-                }
-              </div>
+          <p-step-panel [value]="2">
+            <ng-template #content let-activateCallback="activateCallback">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
-              <div class="flex flex-col gap-1 w-full">
-                <p-floatlabel class="w-full">
-                  <p-inputMask inputId="taxId" mask="a99999999" formControlName="tax_id"
-                    [invalid]="isInvalid('tax_id')"></p-inputMask>
-                  <label for="taxId">C.I.F.</label>
-                </p-floatlabel>
-                @if (isInvalid('tax_id')) {
-                @if (companyForm.get('tax_id')?.hasError('required')) {
-                <p-message severity="error" size="small" variant="simple">El C.I.F. es obligatorio.</p-message>
-                }
-                @if (companyForm.get('tax_id')?.hasError('pattern')) {
-                <p-message severity="error" size="small" variant="simple">Formato de C.I.F. inválido.</p-message>
-                }
-                }
-              </div>
-
-              <div class="flex flex-col gap-1 w-full">
-                <p-floatlabel class="w-full">
-                  <p-inputMask inputId="phone" mask="999 999 999" formControlName="phone" class="w-full"
-                    [invalid]="isInvalid('phone')"></p-inputMask>
-                  <label for="phone">Teléfono</label>
-                </p-floatlabel>
-                @if (isInvalid('phone')) {
-                @if (companyForm.get('phone')?.hasError('required')) {
-                <p-message severity="error" size="small" variant="simple">El teléfono es obligatorio.</p-message>
-                }
-                }
-              </div>
-
-              <div class="flex flex-col gap-1 w-full">
-                <p-floatlabel class="w-full">
-                  <input id="email" autocomplete="email" pInputText formControlName="email" class="w-full"
-                    [invalid]="isInvalid('email')" />
-                  <label for="email">Correo electrónico</label>
-                </p-floatlabel>
-                @if (isInvalid('email')) {
-                @if (companyForm.get('email')?.hasError('required')) {
-                <p-message severity="error" size="small" variant="simple">El correo electrónico es
-                  obligatorio.</p-message>
-                }
-                @if (companyForm.get('email')?.hasError('email')) {
-                <p-message severity="error" size="small" variant="simple">Introduce un formato de correo electrónico
-                  válido.</p-message>
-                }
-                }
-              </div>
-
-              <div class="flex flex-col gap-1 w-full">
-                <p-floatlabel class="w-full">
-                  <p-select inputId="type" [options]="companyTypes" optionLabel="label" optionValue="value"
-                    formControlName="type" [editable]="false" class="w-full" [invalid]="isInvalid('type')"></p-select>
-                  <label for="type">Tipo de organización</label>
-                </p-floatlabel>
-                @if (isInvalid('type')) {
-                @if (companyForm.get('type')?.hasError('required')) {
-                <p-message severity="error" size="small" variant="simple">El tipo de organización es
-                  obligatorio.</p-message>
-                }
-                }
-              </div>
-
-              <div class="flex flex-col gap-1 w-full">
-                <p-floatlabel class="w-full">
-                  <input id="city" pInputText formControlName="city" class="w-full" [invalid]="isInvalid('city')" />
-                  <label for="city">Localidad</label>
-                </p-floatlabel>
-                @if (isInvalid('city')) {
-                @if (companyForm.get('city')?.hasError('required')) {
-                <p-message severity="error" size="small" variant="simple">La localidad es obligatoria.</p-message>
-                }
-                }
-              </div>
-
-              <div class="flex flex-col gap-1 w-full">
-                <p-floatlabel class="w-full">
-                  <input id="province" pInputText formControlName="province" class="w-full"
-                    [invalid]="isInvalid('province')" />
-                  <label for="province">Provincia</label>
-                </p-floatlabel>
-                @if (isInvalid('province')) {
-                @if (companyForm.get('province')?.hasError('required')) {
-                <p-message severity="error" size="small" variant="simple">La provincia es obligatoria.</p-message>
-                }
-                }
-              </div>
-
-              <div class="flex flex-col gap-1 w-full">
-                <p-floatlabel class="w-full">
-                  <p-inputMask inputId="postalCode" mask="99999" formControlName="postal_code" class="w-full"
-                    [invalid]="isInvalid('postal_code')"></p-inputMask>
-                  <label for="postalCode">Código Postal</label>
-                </p-floatlabel>
-                @if (isInvalid('postal_code')) {
-                @if (companyForm.get('postal_code')?.hasError('required')) {
-                <p-message severity="error" size="small" variant="simple">El código postal es obligatorio.</p-message>
-                }
-                @if (companyForm.get('postal_code')?.hasError('pattern')) {
-                <p-message severity="error" size="small" variant="simple">Formato de código postal inválido.</p-message>
-                }
-                }
-              </div>
-
-              <!-- Nuevos campos obligatorios según Laravel -->
-              <div class="flex flex-col gap-1 w-full">
-                <p-floatlabel class="w-full">
-                  <input id="legalName" pInputText formControlName="legal_name" class="w-full"
-                    [invalid]="isInvalid('legal_name')" />
-                  <label for="legalName">Razón Social</label>
-                </p-floatlabel>
-                @if (isInvalid('legal_name')) {
-                @if (companyForm.get('legal_name')?.hasError('required')) {
-                <p-message severity="error" size="small" variant="simple">La razón social es obligatoria.</p-message>
-                }
-                }
-              </div>
-
-              <div class="flex flex-col gap-1 w-full">
-                <p-floatlabel class="w-full">
-                  <input id="registeredAddress" pInputText formControlName="registered_address" class="w-full"
-                    [invalid]="isInvalid('registered_address')" />
-                  <label for="registeredAddress">Domicilio Social</label>
-                </p-floatlabel>
-                @if (isInvalid('registered_address')) {
-                @if (companyForm.get('registered_address')?.hasError('required')) {
-                <p-message severity="error" size="small" variant="simple">El domicilio social es
-                  obligatorio.</p-message>
-                }
-                }
-              </div>
-
-              <div class="flex flex-col gap-1 w-full">
-                <p-floatlabel class="w-full">
-                  <input id="country" pInputText formControlName="country" class="w-full"
-                    [invalid]="isInvalid('country')" />
-                  <label for="country">País</label>
-                </p-floatlabel>
-                @if (isInvalid('country')) {
-                @if (companyForm.get('country')?.hasError('required')) {
-                <p-message severity="error" size="small" variant="simple">El país es obligatorio.</p-message>
-                }
-                }
-              </div>
-
-
-              <div class="flex justify-between items-center col-span-full">
-                <p-button label="Cancelar" severity="secondary" (onClick)="onCancel()" />
-                <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right" (onClick)="activateCallback(2)" />
-              </div>
-            </div>
-          </ng-template>
-        </p-step-panel>
-
-        <p-step-panel [value]="2">
-          <ng-template #content let-activateCallback="activateCallback">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
-
-              <div class="flex flex-col gap-1 w-full col-span-full">
-                <p-floatlabel class="w-full">
-                  <textarea style="max-height: 110px; min-height: 50px; overflow: auto;" id="activity" pInputTextarea
-                    rows="3" formControlName="activity" class="w-full" [invalid]="isInvalid('activity')"></textarea>
+                <div class="flex flex-col gap-1 w-full col-span-full">
                   <label for="activity">Descripción de actividad</label>
-                </p-floatlabel>
-                @if (isInvalid('activity')) {
-                @if (companyForm.get('activity')?.hasError('required')) {
-                <p-message severity="error" size="small" variant="simple">La descripción de actividad es
-                  obligatoria.</p-message>
-                }
-                }
-              </div>
 
-              <div class="flex flex-col gap-1 w-full">
-                <p-floatlabel class="w-full">
-                  <input id="exerciseRightsEmail" pInputText formControlName="exercise_rights_email" class="w-full"
-                    [invalid]="isInvalid('exercise_rights_email')" />
-                  <label for="exerciseRightsEmail">Email para ejercicio de derechos</label>
-                </p-floatlabel>
-                @if (isInvalid('exercise_rights_email')) {
-                @if (companyForm.get('exercise_rights_email')?.hasError('email')) {
-                <p-message severity="error" size="small" variant="simple">Formato de email inválido.</p-message>
-                }
-                }
-              </div>
+                  <textarea style="max-height: 110px; min-height: 50px; overflow: auto;" id="activity" pInputTextarea
+                    rows="3" formControlName="activity" class="w-full"></textarea>
 
-              <div class="flex flex-col gap-1 w-full">
-                <p-floatlabel class="w-full">
-                  <input id="website" pInputText formControlName="website" class="w-full"
-                    [invalid]="isInvalid('website')" />
-                  <label for="website">Sitio web</label>
-                </p-floatlabel>
-                @if (isInvalid('website')) {
-                @if (companyForm.get('website')?.hasError('pattern')) {
-                <p-message severity="error" size="small" variant="simple">Formato de URL inválido.</p-message>
-                }
-                }
-              </div>
-
-              <div class="flex flex-col gap-1 w-full mt-2">
-                <p-floatlabel class="w-full">
-                  <p-inputNumber inputId="number_of_employees" formControlName="number_of_employees" class="w-full"
-                    [invalid]="isInvalid('number_of_employees')"></p-inputNumber>
-                  <label for="number_of_employees">Número de empleados</label>
-                </p-floatlabel>
-                @if (isInvalid('number_of_employees')) {
-                @if (companyForm.get('number_of_employees')?.hasError('required')) {
-                <p-message severity="error" size="small" variant="simple">El número de empleados es
-                  obligatorio.</p-message>
-                }
-                @if (companyForm.get('number_of_employees')?.hasError('min')) {
-                <p-message severity="error" size="small" variant="simple">Debe ser al menos 0.</p-message>
-                }
-                }
-              </div>
-
-              <div class="grid grid-cols-2 gap-4 col-span-full">
-                <div class="flex items-center">
-                  <p-checkbox inputId="externalHosting" formControlName="external_hosting" [binary]="true" />
-                  <label for="externalHosting" class="ml-2">Hosting externo</label>
+                  @if (companyForm.get('activity')?.hasError('required') && !companyForm.get('activity')?.pristine) {
+                  <p-message severity="error" size="small" variant="simple">La descripción de actividad es
+                    obligatoria.</p-message>
+                  }
                 </div>
-                <div class="flex items-center">
-                  <p-checkbox inputId="dataSharing" formControlName="data_sharing" [binary]="true" />
-                  <label for="dataSharing" class="ml-2">Realiza cesiones de datos</label>
+
+                <div class="flex flex-col gap-1 w-full">
+                  <p-floatlabel class="w-full">
+                    <input id="exerciseRightsEmail" pInputText formControlName="exercise_rights_email" class="w-full" />
+                    <label for="exerciseRightsEmail">Email para ejercicio de derechos</label>
+                  </p-floatlabel>
+                  @if (companyForm.get('exercise_rights_email')?.hasError('required') &&
+                  !companyForm.get('exercise_rights_email')?.pristine) {
+                  <p-message severity="error" size="small" variant="simple">El email para ejercicio de derechos es
+                    obligatorio.</p-message>
+
+                  }
+                  @if (companyForm.get('exercise_rights_email')?.hasError('email')) {
+                  <p-message severity="error" size="small" variant="simple">Formato de email inválido.</p-message>
+
+                  }
                 </div>
-                <div class="flex items-center">
-                  <p-checkbox inputId="internationalTransfers" formControlName="international_transfers"
-                    [binary]="true" />
-                  <label for="internationalTransfers" class="ml-2">Transferencias internacionales</label>
+
+                <div class="flex flex-col gap-1 w-full">
+                  <p-floatlabel class="w-full">
+                    <input id="website" pInputText formControlName="website" class="w-full" />
+                    <label for="website">Sitio web</label>
+                  </p-floatlabel>
+                  @if (companyForm.get('website')?.hasError('pattern')) {
+                  <p-message severity="error" size="small" variant="simple">Formato de URL inválido.</p-message>
+
+                  }
                 </div>
-                <div class="flex items-center">
-                  <p-checkbox inputId="massMailing" formControlName="mass_mailing" [binary]="true" />
-                  <label for="massMailing" class="ml-2">Realiza mailing masivo</label>
+
+                <div class="flex flex-col gap-1 w-full mt-2">
+                  <p-floatlabel class="w-full">
+                    <p-inputNumber inputId="number_of_employees" formControlName="number_of_employees"
+                      class="w-full"></p-inputNumber>
+                    <label for="number_of_employees">Número de empleados</label>
+                  </p-floatlabel>
+                  @if (companyForm.get('number_of_employees')?.hasError('required') &&
+                  !companyForm.get('number_of_employees')?.pristine) {
+                  <p-message severity="error" size="small" variant="simple">El número de empleados es
+                    obligatorio.</p-message>
+                  }
+                  @if (companyForm.get('number_of_employees')?.hasError('min')) {
+                  <p-message severity="error" size="small" variant="simple">Debe ser al menos 0.</p-message>
+                  }
+
                 </div>
+
+                <div class="grid grid-cols-2 gap-4 col-span-full">
+                  <div class="flex items-center">
+                    <p-checkbox inputId="externalHosting" formControlName="external_hosting" [binary]="true" />
+                    <label for="externalHosting" class="ml-2">Hosting externo</label>
+                  </div>
+                  <div class="flex items-center">
+                    <p-checkbox inputId="dataSharing" formControlName="data_sharing" [binary]="true" />
+                    <label for="dataSharing" class="ml-2">Realiza cesiones de datos</label>
+                  </div>
+                  <div class="flex items-center">
+                    <p-checkbox inputId="internationalTransfers" formControlName="international_transfers"
+                      [binary]="true" />
+                    <label for="internationalTransfers" class="ml-2">Transferencias internacionales</label>
+                  </div>
+                  <div class="flex items-center">
+                    <p-checkbox inputId="massMailing" formControlName="mass_mailing" [binary]="true" />
+                    <label for="massMailing" class="ml-2">Realiza mailing masivo</label>
+                  </div>
+                </div>
+
+                <div class="flex justify-between items-center col-span-full mt-5">
+                  <p-button label="Eliminar" icon="pi pi-trash" [outlined]="true" (click)="confirmDeleteCompany()" severity="danger"
+                    styleClass="!w-full" />
+                  <div class="flex gap-4">
+                    <p-button label="Volver" severity="secondary" icon="pi pi-arrow-left"
+                      (onClick)="activateCallback(1)" />
+                    <p-button label="Guardar" icon="pi pi-check" severity="success" [disabled]="companyForm.invalid"
+                      type="submit" [loading]="creatingCompany" />
+                  </div>
+
+                </div>
+
               </div>
+            </ng-template>
+          </p-step-panel>
 
-              <div class="flex justify-between items-center col-span-full">
-                <p-button label="Cancelar" severity="secondary" (onClick)="onCancel()" />
 
-                <div class="flex gap-4">
-                  <p-button label="Volver" severity="secondary" icon="pi pi-arrow-left"
-                    (onClick)="activateCallback(1)" />
-
-                  <p-button label="Guardar" icon="pi pi-check" severity="success" type="submit" />
-                </div>
-              </div>
-
-            </div>
-          </ng-template>
-        </p-step-panel>
-      </p-step-panels>
-    </p-stepper>
+        </p-step-panels>
+      </p-stepper>
+    </ng-container>
   </form>
 </p-dialog>
 
-<p-toast position="bottom-right" key="successMessage" />
+
+<p-toast />
+<p-confirmDialog maskStyleClass="backdrop-blur-md" ></p-confirmDialog>

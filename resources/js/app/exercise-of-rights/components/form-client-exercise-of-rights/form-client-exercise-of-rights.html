@@ -136,12 +136,16 @@
 
 
     <p-floatlabel variant="in" class="w-full">
-      <textarea pTextarea id="over_label" formControlName="details" rows="3"
+      <textarea pTextarea id="details" formControlName="details" rows="3"
         class="w-full h-auto resize-none"></textarea>
-  <label for="over_label">{{ labelDetails }}</label>
+  <label for="details">{{ labelDetails }}</label>
     </p-floatlabel>
 
-
+  
+<div class="flex items-center gap-2">
+  <p-checkbox inputId="downloadpdf" [binary]="true" formControlName="downloadpdf"></p-checkbox>
+  <label for="downloadpdf" class="text-sm" >Descargar solicitud automáticamente al crear</label>
+</div>
 
 
   </form>
@@ -158,4 +162,4 @@
 </p-dialog>
 
 
-<p-toast position="bottom-right" key="successMessage" />
+<p-toast position="bottom-right" />

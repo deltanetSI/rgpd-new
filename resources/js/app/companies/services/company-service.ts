@@ -23,6 +23,19 @@ export class CompanyService {
         return this.httpClient.get<CompanyResponseDto[]>(`${environment.apiUrl}/companies/all`, { withCredentials: true });
     }
 
+    updateCompany(id: string, companyDto: CompanyCreateDto): Observable<CompanyResponseDto> {
+        return this.httpClient.put<CompanyResponseDto>(`${environment.apiUrl}/company/${id}`, companyDto);
+    }
+
+    // Obtener compania concreta
+    getCompany(id: string): Observable<CompanyResponseDto> {
+        return this.httpClient.get<CompanyResponseDto>(`${environment.apiUrl}/company/${id}`, { withCredentials: true });
+    }
+
+    // Borrar compania
+    removeCompany(id: string): Observable<void> {
+        return this.httpClient.delete<void>(`${environment.apiUrl}/company/${id}`, { withCredentials: true });
+    }
 
 
 }
