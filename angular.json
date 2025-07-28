@@ -12,7 +12,7 @@
       "architect": {
         "build": {
           "builder": "@angular/build:application",
-          "options": {
+          "options": { 
             "outputPath": "public/build",
             "browser": "resources/js/main.ts",
             "tsConfig": "tsconfig.app.json",
@@ -22,12 +22,7 @@
             ],
             "styles": [
               "resources/js/styles.css"
-            ],
-            "server": "resources/js/main.server.ts",
-            "outputMode": "server",
-            "ssr": {
-              "entry": "resources/js/server.ts"
-            }
+            ]
           },
           "configurations": {
             "production": {
