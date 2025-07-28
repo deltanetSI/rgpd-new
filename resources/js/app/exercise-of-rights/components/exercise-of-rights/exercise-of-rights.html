@@ -1,3 +1,17 @@
+<ng-template #actionBodyTemplate let-rowData>
+  <p-button
+    icon="pi pi-file"
+    severity="secondary"
+    [text]="true"
+    (click)="downloadFile(rowData.download_url, 'solicitud_' + rowData.full_name + '.pdf')" [disabled]="!rowData.download_url" pTooltip="Descargar documento"
+    tooltipPosition="bottom">
+  </p-button>
+</ng-template>
+
+<ng-template #organizationNameTemplate let-item="$implicit">
+  {{ item.organization?.name }}
+</ng-template>
+
 <div class="organization-page-container">
 
 
@@ -7,8 +21,10 @@
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-semibold ml-2">Ejercicios de derecho</h2>
 
-            <p-button label="Añadir solicitud" icon="pi pi-plus" class="p-button-sm" (onClick)="showDialogFlag = true">
+            <p-button [label]="loadingRequests ? 'Cargando...' : 'Añadir solicitud'" icon="pi pi-plus"
+                class="p-button-sm" (onClick)="onShowCreateClientDialog()" [loading]="loadingRequests">
             </p-button>
+
         </div>
 
         <app-datatable [columns]="cols" [data]="requests" [loading]="loadingRequests"></app-datatable>
@@ -16,5 +32,4 @@
     </div>
 </div>
 
-<app-create-client [visible]="showDialogFlag" (dialogClosed)="handleDialogClose()">
-</app-create-client>
+<app-create-client [visible]="createClientDialog" (dialogHidden)="onHideCreateClientDialog()"></app-create-client>

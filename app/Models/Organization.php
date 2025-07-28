@@ -32,6 +32,13 @@ class Organization extends Model
         'dpd_id',
     ];
 
+        protected $casts = [
+        'external_hosting' => 'boolean',
+        'data_sharing' => 'boolean',
+        'international_transfers' => 'boolean',
+        'mass_mailing' => 'boolean'
+    ];
+
 
     public function user(): BelongsTo
     {

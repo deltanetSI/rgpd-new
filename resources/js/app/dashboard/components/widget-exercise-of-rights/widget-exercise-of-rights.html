@@ -11,7 +11,7 @@
                         [autoHide]="false" tooltipPosition="right"></i>
                 </div>
 
-                <p-button label="Crear solicitud inicial" icon="pi pi-plus" iconPos="top" variant="outlined"
+                <p-button [label]="isLoadingRequests ? 'Cargando...' : 'Crear solicitud inicial'"  icon="pi pi-plus" iconPos="top" variant="outlined" [loading]="isLoadingRequests"
                     severity="success" (onClick)="onShowCreateClientDialog()"
                     styleClass="w-full !justify-start !whitespace-nowrap">
                 </p-button>

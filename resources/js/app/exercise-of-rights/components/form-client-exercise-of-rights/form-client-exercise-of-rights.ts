@@ -15,6 +15,7 @@ import { ExerciseOfRightsService } from '../../services/exercise-of-rights-servi
 import { ToastModule } from 'primeng/toast';
 import { TextareaModule } from 'primeng/textarea';
 import { ExerciseOfRightsResponseDto } from '../../interfaces/exercise-of-rights-response-dto';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-create-client',
@@ -32,6 +33,7 @@ import { ExerciseOfRightsResponseDto } from '../../interfaces/exercise-of-rights
     SelectModule,
     ToastModule,
     TextareaModule,
+    CheckboxModule,
   ],
   templateUrl: './form-client-exercise-of-rights.html',
   styleUrls: ['./form-client-exercise-of-rights.css'],
@@ -71,6 +73,7 @@ export class FormClientExerciseOfRights implements OnInit {
       exercise: ['', Validators.required],
       last_name: ['', Validators.required],
       address: ['', Validators.required],
+      downloadpdf: [true],
       details: [{ value: '', disabled: true }],
       postal_code: ['', [Validators.required, Validators.pattern(/^\d{5}$/)]],
       city: ['', Validators.required],
@@ -84,6 +87,7 @@ export class FormClientExerciseOfRights implements OnInit {
     this.selectedExercise = value;
 
     // Cambia el label según la opción seleccionada
+
     if (value) {
 
       this.clientForm.get('details')?.enable();
@@ -129,7 +133,7 @@ export class FormClientExerciseOfRights implements OnInit {
 
     const currentOrganizationId = 1;
 
-    const formValues = this.clientForm.value;
+    const formValues = this.clientForm.getRawValue();
 
     const dataToSend: ExerciseOfRightsCreateDto = {
       organization_id: currentOrganizationId,
@@ -139,6 +143,7 @@ export class FormClientExerciseOfRights implements OnInit {
       nif: formValues.dni,
       city: formValues.city,
       request_content: formValues.details,
+      
     };
 
     console.log('Datos del cliente a enviar al backend:', dataToSend);
@@ -148,26 +153,32 @@ export class FormClientExerciseOfRights implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'Éxito',
-          detail: 'Solicitud de ejercicio de derechos creada correctamente.'
+          detail: 'Solicitud de ejercicio de derechos creada correctamente.',
+          life: 5000
         });
 
-        if (response && response.download_url) {
-          const link = document.createElement('a');
-          link.href = response.download_url;
-          link.download = `solicitud-${response.full_name}.pdf`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          this.messageService.add({
-            severity: 'info',
-            summary: 'Descarga iniciada',
-            detail: 'El documento se está descargando.'
-          });
+        if (formValues.downloadpdf) {
+
+          if (response && response.download_url) {
+            const link = document.createElement('a');
+            link.href = response.download_url;
+            link.download = `solicitud-${response.full_name}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Descarga iniciada',
+              detail: 'El documento se está descargando.',
+              life: 5000
+            });
+          }
+
         }
 
 
+
         console.log('Solicitud creada con éxito:', response);
-        this.onHideDialog();
       },
       error: (error) => {
         console.error('Error al generar la solicitud:', error);
