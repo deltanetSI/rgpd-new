@@ -35,7 +35,6 @@ import { MessageService } from 'primeng/api';
     ToastModule,
     PasswordModule,
   ],
-  providers: [MessageService],
   templateUrl: './user-settings.html',
   styleUrl: './user-settings.css'
 

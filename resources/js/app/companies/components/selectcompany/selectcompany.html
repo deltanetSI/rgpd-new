@@ -1,0 +1,52 @@
+<p-dialog [header]="dialogHeader" [(visible)]="visible" [modal]="true" [style]="{width: '40vw'}" [closable]="selectedCompany !== null" (onHide)="onSelectCompany()"
+    [resizable]="false">
+
+
+    @if(loadingCompanies){
+    <p-progressBar mode="indeterminate" [style]="{ height: '6px' }"></p-progressBar>
+    }@else if (companies.length > 0) {
+
+
+    <p-listbox styleClass="!mt-2 !border-none !shadow-none" listStyleClass="!mt-5" [options]="companies"
+        [(ngModel)]="selectedCompany" optionLabel="name" [filter]="true" filterPlaceHolder="Buscar empresa..."
+        [style]="{'width':'100%', 'min-height':'150px'}"></p-listbox>
+
+
+<div class="flex flex-row gap-2 w-full mt-6 mb-3">
+  <!-- Botón principal: 70% -->
+  <div class="w-[90%]">
+    <p-button
+      label="Seleccionar"
+      icon="pi pi-check"
+      (click)="onSelectCompany()"
+      [disabled]="!selectedCompany"
+      styleClass="w-full !justify-center !whitespace-nowrap">
+    </p-button>
+  </div>
+
+  <!-- Botón secundario: 30% -->
+  <div class="w-[10%]">
+    <p-button
+      icon="pi pi-plus"
+      severity="success"
+      tooltipPosition="top"
+      variant="outlined"
+      pTooltip="Crear nueva empresa"
+      (click)="onCreateNewCompany()"
+      styleClass="w-full !justify-center !whitespace-nowrap">
+    </p-button>
+  </div>
+</div>
+
+
+
+    }@else if (!loadingCompanies && companies.length === 0) {
+    <p>No tienes empresas asociadas.</p>
+    <p>Por favor, crea una nueva empresa para empezar a trabajar.</p>
+    <div class="flex justify-content-end mt-4">
+        <p-button label="Crear Primera Empresa" icon="pi pi-plus" (click)="onCreateNewCompany()"></p-button>
+    </div>
+    }
+
+
+</p-dialog>

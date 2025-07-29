@@ -1,16 +1,17 @@
 <p-toolbar styleClass="app-navbar">
 
-  <div class="p-toolbar-group-start">
+  <div>
     <p-button [icon]="sidebarVisible ? 'pi pi-arrow-left' : 'pi pi-bars'" (click)="onToggleSidebar()" [text]="true"
       [pTooltip]="sidebarVisible ? 'Ocultar sidebar' : 'Mostrar sidebar'" class="p-button-text"></p-button>
   </div>
 
-  <div>
-    <!-- Botón-avatar redondo que abre el popover -->
-    <p-button
-      styleClass="!rounded-full !w-10 !h-10 !text-base bg-surface-200 dark:bg-surface-700 text-surface-900 dark:text-white"
-      [label]="userInitial" type="mibt" (click)="popover.toggle($event)" pTooltip="Opciones de usuario"
-      tooltipPosition="left" />
+
+  <div class="flex gap-2 justify-end items-center">
+
+    <p-splitbutton (onDropdownClick)="onSplitButtonDropdownClick()" (onClick)="onSplitButtonDropdownClick()"
+      menuStyleClass="!border-none !shadow-none" dropdownIcon="pi pi-arrow-right-arrow-left"
+      [label]="isLoadingCompany ? 'Cargando...' : companyInitial" [rounded]="true" severity="secondary" outlined
+      pTooltip="Cambiar responsable" tooltipPosition="bottom" />
 
     <!-- Popover con las opciones -->
     <p-popover [appendTo]="'body'" #popover styleClass="!rounded-xl !top-14">
@@ -37,7 +38,8 @@
 
         <p-button variant="text" icon="pi pi-user" label="Ver perfil" styleClass="w-full !justify-start"> </p-button>
 
-        <p-button variant="text" icon="pi pi-cog" label="Ajustes de cuenta" routerLink="/usersettings" styleClass="w-full !justify-start">
+        <p-button variant="text" icon="pi pi-cog" label="Ajustes de cuenta" routerLink="/usersettings"
+          styleClass="w-full !justify-start">
         </p-button>
 
         <p-divider styleClass="!my-2" />
@@ -58,11 +60,17 @@
     </p-popover>
 
 
-
-
-
+    <!-- Botón-avatar redondo que abre el popover -->
+    <p-button
+      styleClass="!rounded-full !w-10 !h-10 !text-base bg-surface-200 dark:bg-surface-700 text-surface-900 dark:text-white"
+      [label]="userInitial" type="mibt" (click)="popover.toggle($event)" pTooltip="Opciones de usuario"
+      tooltipPosition="left" />
 
 
 
   </div>
+
+
+
+
 </p-toolbar>

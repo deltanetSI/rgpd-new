@@ -111,6 +111,7 @@ export class Createcompany implements OnChanges, OnInit {
 
   // Si hay prop empresa, rellenamos datos, si cerramos form, reseteamos form
   ngOnChanges(changes: SimpleChanges): void {
+    
     if (changes['companyToEdit'] && this.companyToEdit) {
       this.companyForm.patchValue(this.companyToEdit);
       this.activeStep = 1;
