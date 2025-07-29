@@ -16,6 +16,7 @@ import { ToastModule } from 'primeng/toast';
 import { TextareaModule } from 'primeng/textarea';
 import { ExerciseOfRightsResponseDto } from '../../interfaces/exercise-of-rights-response-dto';
 import { CheckboxModule } from 'primeng/checkbox';
+import { ActiveCompanyService } from '../../../companies/services/active-company-service';
 
 @Component({
   selector: 'app-create-client',
@@ -37,7 +38,6 @@ import { CheckboxModule } from 'primeng/checkbox';
   ],
   templateUrl: './form-client-exercise-of-rights.html',
   styleUrls: ['./form-client-exercise-of-rights.css'],
-  providers: [MessageService],
 })
 
 export class FormClientExerciseOfRights implements OnInit {
@@ -51,6 +51,9 @@ export class FormClientExerciseOfRights implements OnInit {
   private messageService = inject(MessageService);
 
   private exerciseOfRightsService = inject(ExerciseOfRightsService);
+
+  private activeCompanyService = inject(ActiveCompanyService);
+
 
 
   labelDetails = 'Información';
@@ -131,28 +134,38 @@ export class FormClientExerciseOfRights implements OnInit {
 
     // Construimos datos
 
-    const currentOrganizationId = 1;
+    const currentOrganizationId = this.activeCompanyService.getCurrentActiveCompanyId();
+
+    if(!currentOrganizationId){
+        this.messageService.add({
+          severity: 'warning',
+          summary: 'Advertencia',
+          detail: 'No se ha seleccionado ningun responsable.',
+          life: 5000
+        });
+        return;
+    }
 
     const formValues = this.clientForm.getRawValue();
 
     const dataToSend: ExerciseOfRightsCreateDto = {
-      organization_id: currentOrganizationId,
+      organization_id: parseInt(currentOrganizationId),
       template_type: formValues.exercise,
       full_name: `${formValues.name} ${formValues.last_name}`,
       full_address: `${formValues.address}, ${formValues.postal_code}, ${formValues.city}, ${formValues.province}`,
       nif: formValues.dni,
       city: formValues.city,
       request_content: formValues.details,
-      
     };
 
-    console.log('Datos del cliente a enviar al backend:', dataToSend);
 
     this.exerciseOfRightsService.createExerciseOfRights(dataToSend).subscribe({
+
       next: (response: ExerciseOfRightsResponseDto) => {
         this.messageService.add({
           severity: 'success',
           summary: 'Éxito',
+          key: 'exerciseofrights',
           detail: 'Solicitud de ejercicio de derechos creada correctamente.',
           life: 5000
         });
@@ -170,15 +183,14 @@ export class FormClientExerciseOfRights implements OnInit {
               severity: 'info',
               summary: 'Descarga iniciada',
               detail: 'El documento se está descargando.',
+                        key: 'exerciseofrights',
+
               life: 5000
             });
           }
 
         }
-
-
-
-        console.log('Solicitud creada con éxito:', response);
+        
       },
       error: (error) => {
         console.error('Error al generar la solicitud:', error);

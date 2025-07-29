@@ -6,11 +6,12 @@ import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { DividerModule } from 'primeng/divider';
 
 @Component({
   selector: 'app-auth-login',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonModule, InputTextModule, CardModule, FloatLabelModule, RouterLink],
+  imports: [ReactiveFormsModule, ButtonModule, InputTextModule, CardModule, FloatLabelModule, RouterLink, DividerModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']

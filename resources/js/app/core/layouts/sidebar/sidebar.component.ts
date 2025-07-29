@@ -5,6 +5,7 @@ import { PanelMenuModule } from 'primeng/panelmenu';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { TooltipModule } from 'primeng/tooltip';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
   standalone: true,
-  imports: [DrawerModule, PanelMenuModule, ButtonModule, CommonModule, TooltipModule]
+  imports: [DrawerModule, PanelMenuModule, ButtonModule, CommonModule, TooltipModule, RouterLink]
 })
 export class SidebarComponent {
 

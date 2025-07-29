@@ -182,8 +182,9 @@
 
 
                 <div class="flex justify-between items-center col-span-full">
-        <p-button label="Eliminar" icon="pi pi-trash" [outlined]="true" (click)="confirmDeleteCompany()" severity="danger"
-                    styleClass="!w-full" />
+
+                  <p-button [class.invisible]="!companyToEdit" label="Eliminar" icon="pi pi-trash" [outlined]="true" (click)="confirmDeleteCompany()"
+                    severity="danger" styleClass="!w-full" />
                   <p-button label="Siguiente" icon="pi pi-arrow-right" iconPos="right"
                     (onClick)="activateCallback(2)" />
                 </div>
@@ -273,8 +274,8 @@
                 </div>
 
                 <div class="flex justify-between items-center col-span-full mt-5">
-                  <p-button label="Eliminar" icon="pi pi-trash" [outlined]="true" (click)="confirmDeleteCompany()" severity="danger"
-                    styleClass="!w-full" />
+                  <p-button [class.invisible]="!companyToEdit" label="Eliminar" icon="pi pi-trash" [outlined]="true" (click)="confirmDeleteCompany()"
+                    severity="danger" styleClass="!w-full" />
                   <div class="flex gap-4">
                     <p-button label="Volver" severity="secondary" icon="pi pi-arrow-left"
                       (onClick)="activateCallback(1)" />
@@ -297,4 +298,4 @@
 
 
 <p-toast />
-<p-confirmDialog maskStyleClass="backdrop-blur-md" ></p-confirmDialog>
+<p-confirmDialog maskStyleClass="backdrop-blur-md"></p-confirmDialog>

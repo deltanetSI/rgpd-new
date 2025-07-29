@@ -17,8 +17,6 @@ import { ToastModule } from 'primeng/toast';
   imports: [CardModule, ButtonModule, FileUploadModule, DividerModule, TooltipModule, MessageModule, ToastModule],
   templateUrl: './widget-export-dataprotection.html',
   styleUrl: './widget-export-dataprotection.css',
-  providers: [MessageService],
-
 })
 export class WidgetExportDataprotection implements OnInit {
 
