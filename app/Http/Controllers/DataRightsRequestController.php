@@ -76,8 +76,13 @@ class DataRightsRequestController extends Controller
         $targetField = $templateEnum->getRequestContentField();
 
         $validationRules = [
-            'template_type' => ['required', 'string', Rule::in(DataRightsTemplateType::values()), Rule::in(DataRightsTemplateType::initialRequestTypes())],
+            'template_type' => ['required', 'string', Rule::in(DataRightsTemplateType::initialRequestTypes())],
         ];
+
+        if ($targetField) {
+            Log::info("hay target field", [$targetField]);
+            $validationRules['request_content'] = 'required|string';
+        }
 
         $validatedData = $request->validate([
             'organization_id' => 'required|integer|exists:organizations,id',
@@ -88,13 +93,16 @@ class DataRightsRequestController extends Controller
             'city' => 'required|string|max:255',
             'date' => 'nullable|date',
         ]);
+
         if ($targetField) {
-            $validationRules['request_content'] = 'required|string';
+            $validatedData[$targetField] = $request['request_content'];
         }
+       
 
         if (empty($validatedData['date'])) {
             $validatedData['date'] = Date::now();
         }
+        Log::info("los datos validados son", $validatedData);
 
         $dataRequest = DataRightsRequest::create($validatedData);
 

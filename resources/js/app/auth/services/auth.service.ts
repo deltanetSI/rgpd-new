@@ -84,7 +84,8 @@ export class AuthService {
   }
 
   register(dto: RegisterDto): Observable<User> {
-    return from(this.registerUseCase.execute(dto)).pipe(
+    return this.registerUseCase.execute(dto).pipe(
+      tap(user => this.userSignal.set(user)),
       switchMap(() => this.fetchAndSetUser())
     );
   }

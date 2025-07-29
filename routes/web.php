@@ -39,7 +39,7 @@ Route::get('/{any}', function (Request $request) {
                      ->header('Content-Type', 'application/javascript');
         }
         
-        // 🔥 AÑADE ESTO - Forzar el tipo MIME para archivos CSS
+       // Forzar el tipo MIME para archivos css
         if ($extension === 'css') {
             return response(file_get_contents($fullAssetPath))
                      ->header('Content-Type', 'text/css')
